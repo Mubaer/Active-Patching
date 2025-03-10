@@ -1,0 +1,50 @@
+# Usage: save as file and import in Scheduled Task manager on Windows.
+# Caution: remove lines 1,2 and 3 before saving. Lines beginning with a # are not supportet
+# and are for documentation purpose only.
+
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Date>2016-10-13T14:08:07.2288437</Date>
+    <Author>NJC2 on TenForums.com</Author>
+    <URI>\Disable Windows Update Reboot Task</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <IdleTrigger>
+      <Enabled>true</Enabled>
+    </IdleTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <UserId>S-1-5-18</UserId>
+      <RunLevel>HighestAvailable</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>false</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <Duration>PT4M</Duration>
+      <WaitTimeout>PT0S</WaitTimeout>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>true</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT72H</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>C:\Windows\System32\schtasks.exe</Command>
+      <Arguments>/change /tn \Microsoft\Windows\UpdateOrchestrator\Reboot /disable</Arguments>
+    </Exec>
+  </Actions>
+</Task>

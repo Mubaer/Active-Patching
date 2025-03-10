@@ -1,0 +1,29 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS\Throttling]
+"EnableBandwidthLimits"=dword:00000001
+"IgnoreBandwidthLimitsOnLan"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS\Throttling\NonWorkSchedule]
+"HighBandwidthLimit"=dword:00000000
+"HighBandwidthType"=dword:00000003
+"NormalBandwidthLimit"=dword:00000000
+"NormalBandwidthType"=dword:00000003
+"LowBandwidthLimit"=dword:00000000
+"LowBandwidthType"=dword:00000003
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS\Throttling\WorkSchedule]
+"StartDay"=dword:00000001
+"EndDay"=dword:00000005
+"StartHour"=dword:00000006
+"EndHour"=dword:00000012
+"HighBandwidthLimit"=dword:0000000a
+"HighBandwidthType"=dword:00000001
+"NormalBandwidthLimit"=dword:0000000a
+"NormalBandwidthType"=dword:00000001
+"LowBandwidthLimit"=dword:0000000a
+"LowBandwidthType"=dword:00000001
+
+# Source: https://community.spiceworks.com/how_to/133819-use-gpo-to-limit-wsus-downloads-during-the-day

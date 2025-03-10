@@ -1,0 +1,36 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
+# Aktuell nicht nötig "DisableDualScan"=dword:00000001
+"DisableWindowsUpdateAccess"=dword:00000000
+"ElevateNonAdmins"=dword:00000000
+"DoNotConnectToWindowsUpdateInternetLocations"=dword:00000000
+"WUServer"="http://wsus.mr-daten.de:8530"
+"WUStatusServer"="http://wsus.mr-daten.de:8530"
+"UpdateServiceUrlAlternate"="http://wsus.mr-daten.de:8530"
+"TargetGroupEnabled"=dword:00000001
+"TargetGroup"="MR Server"
+"ManagedByMR"=dword:00000001
+# Aktuell nicht nötig "SetProxyBehaviorForUpdateDetection"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU]
+"AutoInstallMinorUpdates"=dword:00000000
+"RebootRelaunchTimeoutEnabled"=dword:00000001
+"RebootRelaunchTimeout"=dword:0000000a
+"DetectionFrequencyEnabled"=dword:00000001
+"DetectionFrequency"=dword:00000001
+"RebootWarningTimeoutEnabled"=dword:00000000
+"RescheduleWaitTimeEnabled"=dword:00000001
+"RescheduleWaitTime"=dword:00000001
+"UseWUServer"=dword:00000001
+"IncludeRecommendedUpdates"=dword:00000001
+"AlwaysAutoRebootAtScheduledTime"=dword:00000001
+"AlwaysAutoRebootAtScheduledTimeMinutes"=dword:0000000f
+"NoAutoUpdate"=dword:00000000
+"AUOptions"=dword:00000002
+"ScheduledInstallDay"=dword:00000004
+"ScheduledInstallTime"=dword:00000014
+"ScheduledInstallEveryWeek"=dword:00000001
+"AllowMUUpdateService"=dword:00000001
+"DisableWindowsUpdateAccess"=dword:00000000
+

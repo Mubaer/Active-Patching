@@ -1,0 +1,12 @@
+{"hosts": [
+    {
+    "hostname": "mrm-stg-22pswu1",
+    "ip": "10.254.244.54"
+    }
+,
+    {
+    "hostname": "mrm-stg-22pswu2",
+    "ip": "10.254.244.55"
+    }
+
+]}

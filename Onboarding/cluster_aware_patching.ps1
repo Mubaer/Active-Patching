@@ -1,0 +1,1 @@
+Set-CauClusterRole -ClusterName HV-Cluster01 -Force -CauPluginArguments @{ 'IncludeRecommendedUpdates' = 'True' } -CauPluginName Microsoft.WindowsUpdatePlugin -MaxRetriesPerNode 3 -StartDate "22.01.2020 03:00:00" -DaysOfWeek 1 -WeeksOfMonth @(4) -UseDefault -EnableFirewallRules;Enable-CauClusterRole -ClusterName HV-Cluster01 -Force;

@@ -1,0 +1,61 @@
+Angepasst werden müssen folgende Werte:
+
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
+"WUServer"="http://wsus.mr-daten.de:8530"
+"WUStatusServer"="http://wsus.mr-daten.de:8530"
+"UpdateServiceUrlAlternate"="http://wsus.mr-daten.de:8530"
+
+Die Urls müssen den aktuellen WSUS-Servernamen enthalten.
+Der Port ist dabei immer 8530, der Url beginnt mit dem Hostnamen, der per DNS aufgelöst werden können muss.
+
+Falls beim Kunden die Option "WSUS-Server hat einen eigenen Cache, die Assets laden die Updates individuell aus dem Internet", muss
+"WUServer"="http://wsus.mr-daten.de:8530"
+"WUStatusServer"="http://wsus.mr-daten.de:8530"
+"UpdateServiceUrlAlternate"="http://wsus.mr-daten.de:8530"
+
+gesetzt werden.
+
+
+
+Falls beim Kunden die Option "WSUS-Server hat KEINEN eigenen Cache, die Assets laden die Updates individuell aus dem Internet", muss 
+"WUServer"="http://wsus.mr-daten.de:8530"
+"WUStatusServer"="http://wsus.mr-daten.de:8530"
+"UpdateServiceUrlAlternate"=""
+
+gesetzt werden.
+
+"TargetGroup"="MR_Server" falls der Server kein Comp Status "SQL" hat
+"TargetGroup"="MR_Server_SQL" falls der Server einen Comp Status "SQL" hat
+
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU]
+Bei Reboot setzen/erzeugen:
+"AlwaysAutoRebootAtScheduledTime"=dword:00000001
+"AlwaysAutoRebootAtScheduledTimeMinutes"=dword:0000000f
+
+
+Bei NO Reboot setzen/erzeugen:
+"AlwaysAutoRebootAtScheduledTime"=dword:00000000
+"AlwaysAutoRebootAtScheduledTimeMinutes"=dword:00000000
+
+"ScheduledInstallDay"=dword:00000007
+"ScheduledInstallTime"=dword:00000014
+
+Welches Wartungsfenter hat ein Asset:
+WF1 -> das bedeutet Mittwoch:
+"ScheduledInstallDay"=dword:00000004
+"ScheduledInstallTime"=dword:00000014
+
+WF2 -> das bedeutet Donnerstag:
+"ScheduledInstallDay"=dword:00000005
+"ScheduledInstallTime"=dword:00000014
+
+WF3 -> das bedeutet Samstag:
+"ScheduledInstallDay"=dword:00000007
+"ScheduledInstallTime"=dword:00000014
+
+WF4 -> das bedeutet Sonntag:
+"ScheduledInstallDay"=dword:00000001
+"ScheduledInstallTime"=dword:0000000a
+

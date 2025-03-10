@@ -1,0 +1,126 @@
+
+
+UpdateServer                                  : Microsoft.UpdateServices.Internal.BaseApi.UpdateServer
+LastConfigChange                              : 28.08.2023 14:33:27
+ServerId                                      : 3e24d1e4-4568-41bd-8606-10e3f138f598
+SupportedUpdateLanguages                      : {he, cs, fr, es...}
+TargetingMode                                 : Client
+TrackDynamicCategories                        : False
+SyncFromMicrosoftUpdate                       : True
+IsReplicaServer                               : False
+HostBinariesOnMicrosoftUpdate                 : True
+UpstreamWsusServerName                        : 
+UpstreamWsusServerPortNumber                  : 8530
+UpstreamWsusServerUseSsl                      : False
+UseProxy                                      : False
+ProxyName                                     : 
+ProxyServerPort                               : 80
+UseSeparateProxyForSsl                        : False
+SslProxyName                                  : 
+SslProxyServerPort                            : 443
+AnonymousProxyAccess                          : True
+ProxyUserName                                 : 
+ProxyUserDomain                               : 
+HasProxyPassword                              : False
+AllowProxyCredentialsOverNonSsl               : False
+AllUpdateLanguagesEnabled                     : True
+AllUpdateLanguagesDssEnabled                  : True
+AllUpdateLanguagesUssEnabled                  : True
+LocalContentCachePath                         : D:\WSUS_Updates\WsusContent
+AutoRefreshUpdateApprovals                    : True
+AutoRefreshUpdateApprovalsDeclineExpired      : True
+AutoApproveWsusInfrastructureUpdates          : True
+DownloadUpdateBinariesAsNeeded                : True
+DownloadExpressPackages                       : False
+LogLevel                                      : Info
+LogDestinations                               : All
+LogRolloverFileSizeInBytes                    : 20000000
+ClientEventExpirationTime                     : 15.00:00:00
+ServerEventExpirationTime                     : 90.00:00:00
+ExpiredEventDetectionPeriod                   : 12:00:00
+ClientReportingLevel                          : All
+CollectClientInventory                        : False
+DoDetailedRollup                              : True
+ServerString                                  : Default
+GetContentFromMU                              : False
+MURollupOptin                                 : True
+MaximumAllowedComputers                       : 30000
+LocalPublishingMaxCabSize                     : 384
+DssAnonymousTargeting                         : False
+MaxDeltaSyncPeriod                            : 30.00:00:00
+AnonymousCookieExpirationTime                 : 7.00:00:00
+MaximumServerCookieExpirationTime             : 7.00:00:00
+SimpleTargetingCookieExpirationTime           : 01:00:00
+DssTargetingCookieExpirationTime              : 04:00:00
+MaxCoreUpdatesPerRequest                      : 30
+MaxExtendedUpdatesPerRequest                  : 50
+MaxUpdatesPerRequestInGetUpdateDecryptionData : 100
+DisableSyncPrinterCatalog                     : False
+DisableSyncDrivers                            : False
+MaxXmlPerRequest                              : 5242880
+MaxXmlPerRequestInServerSync                  : 2000000
+DeploymentChangeDeferral                      : 30
+DisableNonCriticalDrivers                     : False
+MaxConcurrentDatabaseCalls                    : 50
+CategoryScanRequestTrackingReportingInterval  : 3600000
+CategoryScanRequestTrackingMaxEntries         : 1000
+IsRegistrationRequired                        : True
+ReportingServiceUrl                           : https://statsfe2.update.microsoft.com
+EventLogFloodProtectTime                      : 00:10:00
+RedirectorChangeNumber                        : 0
+DownloadRegulationUrl                         : 
+DownloadRegulationWebServiceUrl               : 
+LoadOdfLocally                                : False
+OdfFilePath                                   : 
+MUUrl                                         : https://sws.update.microsoft.com
+HandshakeAnchor                               : 
+ProxyPassword                                 : 
+ImportLocalPath                               : 
+DispatchManagerPollingInterval                : 00:00:05
+StateMachineTransitionLoggingEnabled          : False
+StateMachineTransitionErrorCaptureLength      : 00:10:00
+MaxSimultaneousFileDownloads                  : 10
+BitsDownloadPriorityForeground                : False
+BitsHealthScanningInterval                    : 01:00:00
+MaxNumberOfIdsToRequestDataFromUss            : 100
+WsusInstallType                               : 0
+SubscriptionFailureNumberOfRetries            : 3
+SubscriptionFailureWaitBetweenRetries         : 00:15:00
+LogFilePath                                   : C:\Program Files\Update Services\LogFiles\SoftwareDistribution.log
+DoServerSyncCompression                       : True
+OobeInitialized                               : True
+HmDetectIntervalInSeconds                     : 600
+HmRefreshIntervalInSeconds                    : 21600
+HmCoreDiskSpaceGreenMegabytes                 : 500
+HmCoreDiskSpaceRedMegabytes                   : 200
+HmCoreCatalogSyncIntervalInDays               : 1
+HmClientsInstallUpdatesGreenPercent           : 10
+HmClientsInstallUpdatesRedPercent             : 25
+HmClientsInventoryGreenPercent                : 2
+HmClientsInventoryRedPercent                  : 5
+HmClientsInventoryScanDiffInHours             : 30
+HmClientsSilentGreenPercent                   : 10
+HmClientsSilentRedPercent                     : 25
+HmClientsSilentDays                           : 30
+HmClientsTooManyGreenPercent                  : 80
+HmClientsTooManyRedPercent                    : 90
+HmCoreFlags                                   : 4294967295
+HmClientsFlags                                : 4294967295
+HmDatabaseFlags                               : 4294967295
+HmWebServicesFlags                            : 4294967295
+StatsDotNetWebServiceUri                      : http://localhost
+StatsDotNetMaximumBatchSize                   : 500
+QueueFlushTimeInMS                            : 3000
+QueueFlushCount                               : 100
+QueueRejectCount                              : 500
+DispatchMaximumSimultaneousHandlerCalls       : 5
+SleepTimeAfterErrorInMS                       : 30000
+UseCookieValidation                           : True
+DoReportingDataValidation                     : True
+DoReportingSummarization                      : True
+RollupResetGuid                               : 4bcb7b33-c862-4987-86ee-6cd95d17a6f6
+DssRollupChunkSize                            : 5000
+RevisionDeletionTimeThreshold                 : 30.00:00:00
+RevisionDeletionSizeThreshold                 : 1024
+ComputerDeletionTimeThreshold                 : 30.00:00:00
+

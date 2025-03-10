@@ -1,0 +1,6 @@
+HowTo Update non-AD-Server und HV-Hosts, die nicht Mitglied der AD-Domain isnd:
+
+1. Setzen der Reg-Keys.
+2. Erzeugen eines Scheduled Tasks wie in Datei PSWUpdate.xml definiert. Task NICHT laufen lassen
+3. Starten des Scheduled Tasks vom WSUS-Server aus über Scheduler oder über Ansible
+ 3.1. aktuell wäre das die Datei pswu-update_nonad.ps1
