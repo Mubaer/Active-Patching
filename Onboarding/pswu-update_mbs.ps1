@@ -1,5 +1,5 @@
 Import-Module pswindowsupdate
-$version = "2.1.0"
+$version = "2.2.0" # auto-delet job after 30 minutes
 $Transscript_path = "C:\mr_managed_it\Logs\active_patching_mbs." + (Get-Date).ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"
 Get-WsusServer -Name localhost -PortNumber 8530
 
@@ -63,8 +63,9 @@ $FDN + " Reboot" | Out-File $Transscript_path -Append
 Invoke-Command -ComputerName $FDN -ScriptBlock {Param($user, $Password)
     $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "Install-WindowsUpdate -AcceptAll -IgnoreReboot"
     $trigger = New-ScheduledTaskTrigger -Once -At $(Get-Date)
+    $settings = New-ScheduledTaskSettingsSet -DeleteExpiredTaskAfter "00:30:00" 
     Unregister-ScheduledTask -TaskName "PSWindowsUpdate" -Confirm:$false
-    Register-ScheduledTask -Action $action -Trigger $trigger -User $user -Password $Password -TaskName "PSWindowsUpdate" -Description "PSWindowsUpdate"
+    Register-ScheduledTask -Action $action -Trigger $trigger -Settings $settings -User $user -Password $Password -TaskName "PSWindowsUpdate" -Description "PSWindowsUpdate"
     write-host "Starting"
     Start-ScheduledTask -TaskName "PSWindowsUpdate" } -Credential $credential -Verbose -ArgumentList $user, $Password
 
@@ -74,8 +75,9 @@ $FDN + " No Reboot" | Out-File $Transscript_path -Append
 Invoke-Command -ComputerName $FDN -ScriptBlock {Param($user, $Password)
     $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "Install-WindowsUpdate -AcceptAll -AutoReboot"
     $trigger = New-ScheduledTaskTrigger -Once -At $(Get-Date)
+    $settings = New-ScheduledTaskSettingsSet -DeleteExpiredTaskAfter "00:30:00" 
     Unregister-ScheduledTask -TaskName "PSWindowsUpdate" -Confirm:$false
-    Register-ScheduledTask -Action $action -Trigger $trigger -User $user -Password $Password -TaskName "PSWindowsUpdate" -Description "PSWindowsUpdate"
+    Register-ScheduledTask -Action $action -Trigger $trigger -Settings $settings -User $user -Password $Password -TaskName "PSWindowsUpdate" -Description "PSWindowsUpdate"
     write-host "Starting"
     Start-ScheduledTask -TaskName "PSWindowsUpdate" } -Credential $credential -Verbose -ArgumentList $user, $Password
 }

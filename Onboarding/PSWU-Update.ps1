@@ -1,16 +1,18 @@
 Import-Module pswindowsupdate
-$version = "2.0.7"
+$version = "2.2.3" # exclude lists added
 $Transscript_path = "C:\mr_managed_it\Logs\active_patching." + (Get-Date).ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"
 "Script version: " + $version | Out-File $Transscript_path -Append
 Get-WsusServer -Name localhost -PortNumber 8530
 
 #$VMs = get-wsuscomputer -NameIncludes "hpim" | Select-Object fulldomainname
+$MBs = Get-Content -Path "C:\mr_managed_it\Scripts\mbs_hosts.txt"
+$NONADs = Get-Content -Path "C:\mr_managed_it\Scripts\nonad_hosts.txt"
 $arraylist = $(Get-WsusComputer).FullDomainName
 "List of vms: " + $arraylist | Out-File $Transscript_path -Append
 
-# Wenn einzelne Server ausgenommen werden sollen, einfach die nächsten drei Zeilen wieder aktiv machen und was sinnvolles reinschreiben. Evtl. die Zeile 13 mehrfach verwenden.
+# Wenn einzelne Server ausgenommen werden sollen, einfach in die Zeile 15 nicht auskommentieren und was sinnvolles reinschreiben. Evtl. die Zeile 15 mehrfach verwenden.
 [System.Collections.ArrayList]$vms = $arraylist
-#$vms.Remove("mrm-stg-22pswu1")
+#$vms.Remove("mrm-stg-22pswu1.mrm.stg")
 "Removing assets from list ..."  | Out-File $Transscript_path -Append
 
 # Get-Date liefert den Tag der Woche im DE-Format, dh. Montag ist 1
@@ -25,9 +27,12 @@ $AUOptions               = ""
 $ManagedByMR             = ""
 $ScheduledInstallDay     = ""
 
+if ($MBs -match $VM -or $NONADs -match $VM){
+
+"Asset " + $VM + " in exclusion list" | Out-File $Transscript_path -Append}else{
 "Asset name: " + $vm | Out-File $Transscript_path -Append
 
-if (Test-Connection $VM -Count 1){
+if (Test-Connection $VM -Count 1 -Quiet){
 
 $FDN                     = $VM
 $EP                      = Invoke-Command -ComputerName $FDN {Get-ExecutionPolicy}
@@ -35,8 +40,6 @@ $Reboot                  = Invoke-Command -ComputerName $FDN {Get-ItemProperty -
 $AUOptions               = Invoke-Command -ComputerName $FDN {Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\' -Name AUOptions -ErrorAction SilentlyContinue | Select-Object AUOptions}
 $ManagedByMR             = Invoke-Command -ComputerName $FDN {Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\'    -Name ManagedByMR -ErrorAction SilentlyContinue | Select-Object ManagedByMR}
 $ScheduledInstallDay     = Invoke-Command -ComputerName $FDN {Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'  -Name ScheduledInstallDay -ErrorAction SilentlyContinue | Select-Object ScheduledInstallDay}
-
-}
 
 if($ManagedByMR.ManagedByMR -eq "1" -and $ScheduledInstallDay.ScheduledInstallDay -eq $today){
 
@@ -56,18 +59,20 @@ Invoke-Command -ComputerName $FDN -ScriptBlock {Import-Module PSWindowsUpdate; E
 "Installing Updates ..." | Out-File $Transscript_path -Append
 
 if($Reboot.AlwaysAutoRebootAtScheduledTime -eq "0" -and $AUOptions.AUOptions -eq "2"){
-
-
 $FDN + " Reboot" | Out-File $Transscript_path -Append
 Invoke-WUJob -ComputerName $FDN -Script { Install-WindowsUpdate -AcceptAll -IgnoreReboot } -Confirm:$false -verbose -RunNow
 }else{
 $FDN + " No Reboot" | Out-File $Transscript_path -Append
 Invoke-WUJob -ComputerName $FDN -Script { Install-WindowsUpdate -AcceptAll -AutoReboot } -Confirm:$false -verbose -RunNow
 }
-"Installed ..." | Out-File $Transscript_path -Append
+"Updates will be installed offline. Moving on." | Out-File $Transscript_path -Append
 Invoke-Command -ComputerName $FDN {param($EP) Set-ExecutionPolicy $EP} -ArgumentList $EP
 }else{
 "Nothing to do" | Out-File $Transscript_path -Append
 }
 
+}else{
+"Not reachable" | Out-File $Transscript_path -Append
+}
+}
 }
