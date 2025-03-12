@@ -32,7 +32,7 @@ if ($MBs -match $VM -or $NONADs -match $VM){
 "Asset " + $VM + " in exclusion list" | Out-File $Transscript_path -Append}else{
 "Asset name: " + $vm | Out-File $Transscript_path -Append
 
-if (Test-Connection $VM -Count 1 -Quiet){
+if (Test-Connection $VM -Count 1 -quiet){
 
 $FDN                     = $VM
 $EP                      = Invoke-Command -ComputerName $FDN {Get-ExecutionPolicy}
@@ -59,10 +59,10 @@ Invoke-Command -ComputerName $FDN -ScriptBlock {Import-Module PSWindowsUpdate; E
 "Installing Updates ..." | Out-File $Transscript_path -Append
 
 if($Reboot.AlwaysAutoRebootAtScheduledTime -eq "0" -and $AUOptions.AUOptions -eq "2"){
-$FDN + " Reboot" | Out-File $Transscript_path -Append
+$FDN + " No Reboot" | Out-File $Transscript_path -Append
 Invoke-WUJob -ComputerName $FDN -Script { Install-WindowsUpdate -AcceptAll -IgnoreReboot } -Confirm:$false -verbose -RunNow
 }else{
-$FDN + " No Reboot" | Out-File $Transscript_path -Append
+$FDN + " Reboot" | Out-File $Transscript_path -Append
 Invoke-WUJob -ComputerName $FDN -Script { Install-WindowsUpdate -AcceptAll -AutoReboot } -Confirm:$false -verbose -RunNow
 }
 "Updates will be installed offline. Moving on." | Out-File $Transscript_path -Append
