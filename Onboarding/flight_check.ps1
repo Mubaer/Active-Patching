@@ -160,7 +160,7 @@ function Test-PendingReboot {
 Clear-Host
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.1" # groups.count
+$check_version = "2.2.2" # check for Powershell modules
 
 # Part 1
 # System health parameters
@@ -457,6 +457,7 @@ $wc_taskresult = "N/A"
 
 $dnd = "C:\mr_managed_it\mr_do_not_delete_file.txt"
 $rs =  "C:\mr_managed_it\regsettings.reg"
+$psm = Get-ChildItem -Path 'C:\Program Files\WindowsPowerShell\Modules\*' -Recurse | Where-Object {$_.FullName -match "PSWindowsUpdate.psm1"}
 
 $fileExists = [System.IO.File]::Exists($dnd)
 if($fileExists){
@@ -468,6 +469,10 @@ $fileExists = [System.IO.File]::Exists($rs)
 if($fileExists){
 $rs = "True"}else{
 $rs = "False"}
+
+if($psm){
+$psm = "True"}else{
+$psm = "False"}
 
 # Check for Icinga certs
 
@@ -647,6 +652,7 @@ $result += "Systemsettings WSUS groups count: " + $GroupsAll  + "`r`n"
 $result += "Systemsettings WSUS endpoint: " + $wsus_endpoint    + "`r`n"
 $result += "Systemsettings File DoNotDelete exists: " + $dnd    + "`r`n"
 $result += "Systemsettings File RegSettings exists: " + $rs    + "`r`n"
+$result += "Systemsettings Powershell modules exists: " + $psm    + "`r`n"
 $result += "Systemsettings File Icinga Certs exist: " + $iccerts    + "`r`n"
 $result += "Systemsettings Icinga satellite reachable: " + $ic80.TcpTestSucceeded    + "`r`n"
 $result += "Systemsettings Icinga web repo reachable: " + $ic443.TcpTestSucceeded    + "`r`n"
