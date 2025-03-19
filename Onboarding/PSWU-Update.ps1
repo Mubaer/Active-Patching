@@ -54,7 +54,7 @@ New-Item -Path $DestPath -ItemType directory -ErrorAction SilentlyContinue
 Copy-Item -Recurse -Path $SourcePath -destination $DestPath -ErrorAction SilentlyContinue
 "Done ..." | Out-File $Transscript_path -Append
 
-Invoke-Command -ComputerName $FDN -ScriptBlock {Import-Module PSWindowsUpdate; Enable-WURemoting; Get-WUList}
+Invoke-Command -ComputerName $FDN -ScriptBlock {Import-Module PSWindowsUpdate; Enable-WURemoting -Confirm:$false; Get-WUList}
 
 "Installing Updates ..." | Out-File $Transscript_path -Append
 
