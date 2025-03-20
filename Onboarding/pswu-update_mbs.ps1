@@ -1,5 +1,5 @@
 Import-Module pswindowsupdate
-$version = "2.2.0" # auto-delet job after 30 minutes
+$version = "2.2.0" # 
 $Transscript_path = "C:\mr_managed_it\Logs\active_patching_mbs." + (Get-Date).ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"
 Get-WsusServer -Name localhost -PortNumber 8530
 
