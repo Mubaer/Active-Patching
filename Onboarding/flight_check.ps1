@@ -160,7 +160,7 @@ function Test-PendingReboot {
 Clear-Host
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.2" # check for Powershell modules
+$check_version = "2.2.3" #check version number pswu-files
 
 # Part 1
 # System health parameters
@@ -457,7 +457,6 @@ $wc_taskresult = "N/A"
 
 $dnd = "C:\mr_managed_it\mr_do_not_delete_file.txt"
 $rs =  "C:\mr_managed_it\regsettings.reg"
-$psm = Get-ChildItem -Path 'C:\Program Files\WindowsPowerShell\Modules\*' -Recurse | Where-Object {$_.FullName -match "PSWindowsUpdate.psm1"}
 
 $fileExists = [System.IO.File]::Exists($dnd)
 if($fileExists){
@@ -470,9 +469,20 @@ if($fileExists){
 $rs = "True"}else{
 $rs = "False"}
 
-if($psm){
+$psm = Get-ChildItem -Path 'C:\Program Files\WindowsPowerShell\Modules\*' -Recurse | Where-Object {$_.FullName -match "PSWindowsUpdate.psm1"}
+
+if ($psm){
 $psm = "True"}else{
-$psm = "False"}
+$psm= "False"}
+
+$pswu       = "N/A"
+$pswu_mbs   = "N/A"
+$pswu_nonad = "N/A"
+$da         = "N/A"
+$pswu       = (Get-content -Path "C:\mr_managed_it\scripts\PSWU-Update.ps1" | Where-Object { $_.Contains("version =")}).Substring(12,5)
+$pswu_mbs   = (Get-content -Path "C:\mr_managed_it\scripts\PSWU-Update_mbs.ps1" | Where-Object { $_.Contains("version =")}).Substring(12,5)
+$pswu_nonad = (Get-content -Path "C:\mr_managed_it\scripts\PSWU-Update_nonad.ps1" | Where-Object { $_.Contains("version =")}).Substring(12,5)
+$da         = (Get-content -Path "C:\mr_managed_it\scripts\decline_approve.ps1" | Where-Object { $_.Contains("version =")}).Substring(12,5)
 
 # Check for Icinga certs
 
@@ -561,6 +571,14 @@ if($GroupsAll){
 $GroupsAll = ($GroupsAll).count
 }else{
 $GroupsAll = "N/A"
+}
+
+$wsman = Test-WSMan
+
+if($wsman){
+    $wsman = "True"
+}else{
+    $wsman = "False"
 }
 
 # Part 5
@@ -652,10 +670,15 @@ $result += "Systemsettings WSUS groups count: " + $GroupsAll  + "`r`n"
 $result += "Systemsettings WSUS endpoint: " + $wsus_endpoint    + "`r`n"
 $result += "Systemsettings File DoNotDelete exists: " + $dnd    + "`r`n"
 $result += "Systemsettings File RegSettings exists: " + $rs    + "`r`n"
-$result += "Systemsettings Powershell modules exists: " + $psm    + "`r`n"
+$result += "Systemsettings File PowerShell module exists: " + $psm    + "`r`n"
+$result += "Systemsettings PSWU version: " + $pswu    + "`r`n"
+$result += "Systemsettings PSWU_MBS version: " + $pswu_mbs    + "`r`n"
+$result += "Systemsettings PSWU_NONAD version: " + $pswu_nonad    + "`r`n"
+$result += "Systemsettings Decline_Approve version: " + $da    + "`r`n"
 $result += "Systemsettings File Icinga Certs exist: " + $iccerts    + "`r`n"
 $result += "Systemsettings Icinga satellite reachable: " + $ic80.TcpTestSucceeded    + "`r`n"
 $result += "Systemsettings Icinga web repo reachable: " + $ic443.TcpTestSucceeded    + "`r`n"
+$result += "Systemsettings PSRemote enabled: " + $wsman    + "`r`n"
 $result += "Patchsettings Disabled UI access: " + $uiacccess    + "`r`n"
 $result += "Patchsettings Valid Registry settings: " + $regsettings    + "`r`n"
 $result += "Patchsettings Patchprovider WSUS active: " + $patchprovider.IsManaged + "`r`n"
