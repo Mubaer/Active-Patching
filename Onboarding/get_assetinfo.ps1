@@ -1039,5 +1039,5 @@ $content -replace "num_hvs", $num_hvs | Set-Content $scriptdir\$outfile
 
 # Upload der Ergebnisdatei und der Logdatei nach https://share.mr-daten.de
 
-#Upload_secureshare -mFileNameToUpload $outfile -mEnabledLogging $true
-#Upload_secureshare -mFileNameToUpload $transscriptfile -mEnabledLogging $false
+Upload_secureshare -mFileNameToUpload $outfile -mEnabledLogging $true
+Upload_secureshare -mFileNameToUpload $transscriptfile -mEnabledLogging $false
