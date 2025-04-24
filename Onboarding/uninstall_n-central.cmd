@@ -12,4 +12,10 @@ if exist "C:\Program Files (x86)\SolarWinds MSP\Ecosystem Agent\unins000.exe" "C
 if exist "C:\Program Files (x86)\MspPlatform\FileCacheServiceAgent\unins000.exe" "C:\Program Files (x86)\MspPlatform\FileCacheServiceAgent\unins000.exe" /SILENT
 MsiExec.exe /X{3E869620-B65D-49C0-9FD1-702790098D6B} /qn
 
-REM
+
+
+REM Danach folgende Verzeichnisse entfernen:
+REM C:\ProgramDATA\MSPEcosystem
+REM C:\ProgramDATA\MspPlatform
+REM C:\ProgramDATA\N-able Technologies
+REM C:\ProgramDATA\SolarWinds MSP
