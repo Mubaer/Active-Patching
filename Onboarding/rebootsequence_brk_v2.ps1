@@ -17,7 +17,7 @@ $rebootresult = 0
 
 while($result -ne 0){
     $result = 0
-    $today      = (Get-Date).DayOfWeek.value__  + 3
+    $today      = (Get-Date).DayOfWeek.value__  + 1
     $WF = ""
     switch ($today) {
     
