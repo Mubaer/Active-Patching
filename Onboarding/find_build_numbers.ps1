@@ -1,8 +1,8 @@
 #############################################################################################################
-# Peter Ziegler 03/2024                                                                                     #
-# MR Releasedntechnik                                                                                           #
+# Peter Ziegler 05/2025                                                                                     #
+# MR Datentechnik                                                                                           #
 # Dieses Script sucht bei MS im Web auf den angeführten URLS nach aktuelle  Buildnumbers der Windows Server #
-# Betriebssysteme 2016, 2019 und 2022.                                                                      #
+# Betriebssysteme 2016, 2019, 2022 und 2025                                                                 #
 #############################################################################################################
 
 $months = @{
