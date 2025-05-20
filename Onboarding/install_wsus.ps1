@@ -81,14 +81,14 @@ while($result -ne "True"){
      $CurrentDomain = "LDAP://" + ([ADSI]"").distinguishedName
      $domain = New-Object System.DirectoryServices.DirectoryEntry($CurrentDomain,$UserName,$Password)
     
-    if ($domain.name -eq $null)
+    if ($null -eq $domain.name)
     {
-     write-host "Anmeldung mit den angegebenen Daten fehlgeschlagen. Bitte überprüfen. Installation kann icht fortgesetzt werden." -ForegroundColor Red
+     write-host "Anmeldung mit den angegebenen Daten fehlgeschlagen. Bitte überprüfen. Installation kann nicht fortgesetzt werden." -ForegroundColor Red
      $result = "false"
     }
     else
     {
-     write-host "Anmeldung an die Active Directory Domain "$domain.name "erfolgreich. Instalation wird fortgesetzt." -ForegroundColor Green
+     write-host "Anmeldung an die Active Directory Domain "$domain.name "erfolgreich. Installation wird fortgesetzt." -ForegroundColor Green
      $result = "true"
     }
     
