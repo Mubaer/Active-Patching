@@ -331,6 +331,16 @@ ShrinkDatabaseFile
 Write-Host "Shrinking Database Log file ..." -ForegroundColor Green
 ShrinkDatabaseLogFile
 
+# Reset WSUS for local cache configurations
+
+$wsus = (get-wsusserver).GetConfiguration()
+if( $wsus.HostBinariesOnMicrosoftUpdate -like "False"){
+
+    Invoke-Expression "C:\Program Files\Update Services\Tools\WSUSutil.exe reset"
+
+}
+
+
 }else{
 
 write-host "Fehler! Mind. einer der Dateien C:\mr_managed_it\Scripts\kb_decline_approve.csv oder category_decline_approve.csv wurde nicht gefunden. Es werden keine Veraenderungen an den WSUS-Freigaben vorgenommen." -ForegroundColor Red
