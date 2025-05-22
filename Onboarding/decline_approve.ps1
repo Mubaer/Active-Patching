@@ -160,7 +160,7 @@ EXEC sp_updatestats
 PRINT 'Done updating statistics.' + convert(nvarchar, getdate(), 121)  
 "
 
-$version = "1.6.2" # Check if Cust is special :)
+$version = "1.6.3" # WSUSutil.exe reset for local cache configurations
 
 Start-Transcript -Path "C:\mr_managed_it\Logs\decline_approve.txt" #-Append
 
@@ -194,14 +194,14 @@ $GroupsAll    = Get-PSWSUSGroup -Name 'MR_Server', 'MR_Server_SQL', 'MR_Server_H
 $GroupsSQL    = Get-PSWSUSGroup -Name 'MR_Server_SQL'
 $GroupsSystem = Get-PSWSUSGroup -Name 'MR_System'
 
-# Find special Customer
-
+<# Find special Customer
 $CustomerID = $(Get-WsusServer).GetConfiguration().ServerId
 if($CustomerID.Guid -like "e3477b62-a4b6-47e0-b434-831d91d16d83"){
 $ApprovalDate = (Get-Date -Day 1).Date.AddMonths(-1).AddMilliseconds(-1).Date.AddMonths(1)
 }else{
 $ApprovalDate = Get-Date
 }
+#>
 
 # Step 0 Reset all approvements and declines
 Write-Host "Reset all approvals ..."
@@ -272,7 +272,7 @@ $Categories  = Get-PSWSUSCategory|Where-Object{$_.title -match $include_categori
 
 $Categories | Format-Table -AutoSize
 
-Get-PSWSUSUpdate -Category $Categories -ToCreationDate $ApprovalDate | Where-Object {$_.IsDeclined -match 'False'} | Approve-PSWSUSUpdate  -Group $GroupsAll -Action Install
+Get-PSWSUSUpdate -Category $Categories | Where-Object {$_.IsDeclined -match 'False'} | Approve-PSWSUSUpdate  -Group $GroupsAll -Action Install
 
 $include_categories = "SQL"
 $exclude_categories = "Exchange|Azure|Sharepoint|Skype" 
@@ -282,7 +282,7 @@ $Categories  = Get-PSWSUSCategory | Where-Object{$_.title -match $include_catego
 
 $Categories | Format-Table -AutoSize
 
-Get-PSWSUSUpdate -Category $Categories -ToCreationDate $ApprovalDate | Where-Object {$_.IsDeclined -match 'False'} | Approve-PSWSUSUpdate  -Group $GroupsSQL -Action Install
+Get-PSWSUSUpdate -Category $Categories | Where-Object {$_.IsDeclined -match 'False'} | Approve-PSWSUSUpdate  -Group $GroupsSQL -Action Install
 
 # Step 5 decline unwanted kbs
 # Step 6 unapprove unwanted kbs for specific groups
