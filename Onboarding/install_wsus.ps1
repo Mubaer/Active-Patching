@@ -7,6 +7,8 @@ Write-host "Usage: Please add 'local' or 'remote' to tell the WSUS-Server where 
 Exit 1
 }
 
+# Version 2.0.2 added sleep after iisreset and wsus-services restart
+
 # Prepare OS and Disks
 $disk_already_in_use = 0
 $disknumber = ''
@@ -180,7 +182,7 @@ $wsusConfig.Save()
 
 iisreset
 Restart-Service *Wsus* -v
-
+Start-Sleep 60
 # Get WSUS Subscription and perform initial synchronization to get latest categories
 $subscription = $wsus.GetSubscription()
 $subscription.StartSynchronizationForCategoryOnly()
