@@ -336,7 +336,7 @@ ShrinkDatabaseLogFile
 $wsus = (get-wsusserver).GetConfiguration()
 if( $wsus.HostBinariesOnMicrosoftUpdate -like "False"){
 
-    Invoke-Expression "C:\Program Files\Update Services\Tools\WSUSutil.exe reset"
+   & "C:\Program Files\Update Services\Tools\WSUSutil.exe" reset
 
 }
 
