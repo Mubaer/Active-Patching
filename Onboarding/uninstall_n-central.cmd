@@ -19,3 +19,33 @@ REM C:\ProgramDATA\MSPEcosystem
 REM C:\ProgramDATA\MspPlatform
 REM C:\ProgramDATA\N-able Technologies
 REM C:\ProgramDATA\SolarWinds MSP
+
+# Andere Methode (remove Windows Agent deinstalliert auch alle andere Software)
+
+$computername = "srvrdsh05"
+$softwareName = "Windows Agent"
+
+$software = Get-WmiObject Win32_Product -ComputerName $computername | Where-Object { $_.Name -eq $softwareName }
+if ($software) {
+    $software.Uninstall()
+} else {
+    Write-Host "$softwareName is not installed on $computername"
+}
+
+# oder
+
+$computername = "RemoteComputerName"
+$softwareName = "SoftwareName"
+
+$uninstallString = Invoke-Command -ComputerName $computername -ScriptBlock {
+    $uninstallKey = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    Get-ItemProperty $uninstallKey | Where-Object { $_.DisplayName -eq $using:softwareName } | Select-Object -ExpandProperty UninstallString
+}
+
+if ($uninstallString) {
+    Invoke-Command -ComputerName $computername -ScriptBlock {
+        Start-Process -FilePath $using:uninstallString -ArgumentList "/quiet" -Wait
+    }
+} else {
+    Write-Host "$softwareName is not installed on $computername"
+}
