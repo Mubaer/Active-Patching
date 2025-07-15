@@ -6,7 +6,29 @@
 
 # Diese Variante kommt ohne zusätzliche Software aus :)
 
-function SqlQuery($server, $database, $query)
+function ShrinkDatabaseFile(){ 
+ $connection = New-Object System.Data.SqlClient.SqlConnection
+ $connection.ConnectionString = 'server=\\.\pipe\MICROSOFT##WID\tsql\query;database=SUSDB;trusted_connection=true;'
+ $connection.Open()
+ $command = $connection.CreateCommand()
+ $command.CommandText = "USE SUSDB; DBCC SHRINKFILE (N'SUSDB' , 0)"
+ $command.CommandTimeout=0
+ $result = $command.ExecuteReader()
+ $connection.Close()
+}
+
+function ShrinkDatabaseLogFile(){ 
+ $connection = New-Object System.Data.SqlClient.SqlConnection
+ $connection.ConnectionString = 'server=\\.\pipe\MICROSOFT##WID\tsql\query;database=SUSDB;trusted_connection=true;'
+ $connection.Open()
+ $command = $connection.CreateCommand()
+ $command.CommandText = "USE SUSDB; DBCC SHRINKFILE (N'SUSDB_LOG' , 0)"
+ $command.CommandTimeout=0
+ $result = $command.ExecuteReader()
+ $connection.Close()
+}
+
+function CleanUpDatabase($server, $database, $query)
 {
  $connection = New-Object System.Data.SqlClient.SqlConnection
  $connection.ConnectionString = 'server=\\.\pipe\MICROSOFT##WID\tsql\query;database=SUSDB;trusted_connection=true;'
@@ -123,14 +145,26 @@ PRINT 'Updating all statistics.' + convert(nvarchar, getdate(), 121)
 EXEC sp_updatestats 
 PRINT 'Done updating statistics.' + convert(nvarchar, getdate(), 121)  
 "
-Import-Module pswindowsupdate
-Import-Module poshwsus
-$date = $(Get-Date).AddDays(-365)
 
+$version = "2.0.2"
+Import-Module poshwsus
+Import-Module pswindowsupdate
 Connect-PSWSUSServer -WsusServer localhost -Port 8530
 Get-WsusServer -Name localhost -PortNumber 8530
-Get-PSWSUSUpdate -ToCreationDate $date | Where-Object {$_.IsDeclined -match 'False'} | Deny-PSWSUSUpdate
 
+
+$date1 = $(Get-Date).AddDays(-180)
+$date2 = $(Get-Date).AddDays(-30)
+
+# Cleanup Database
+
+Write-Host "Cleaning up database ..." -ForegroundColor Green
+Get-PSWSUSUpdate -ToCreationDate $date1 | Where-Object {$_.IsDeclined -match 'False'} | Deny-PSWSUSUpdate
+Get-PSWSUSUpdate -IncludeText "Security Intelligence Update" -ToCreationDate $date2 | Where-Object {$_.IsDeclined -match 'False'} | Deny-PSWSUSUpdate
+Get-PSWSUSUpdate -IncludeText "Edge-" -ToCreationDate $date2 | Where-Object {$_.IsDeclined -match 'False'} | Deny-PSWSUSUpdate
 Get-WsusServer | Invoke-WsusServerCleanup -CleanupObsoleteUpdates -CleanupUnneededContentFiles -CompressUpdates -DeclineExpiredUpdates -DeclineSupersededUpdates
-
-SqlQuery $Server $Database $sql
+CleanUpDatabase $Server $Database $sql
+Write-Host "Shrinking Database file ..." -ForegroundColor Green
+ShrinkDatabaseFile
+Write-Host "Shrinking Database Log file ..." -ForegroundColor Green
+ShrinkDatabaseLogFile
