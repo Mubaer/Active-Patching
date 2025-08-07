@@ -1,8 +1,8 @@
 #############################################################################################################
-# Peter Ziegler 03/2024                                                                                     #
-# MR Releasedntechnik                                                                                           #
+# Peter Ziegler 05/2025                                                                                     #
+# MR Datentechnik                                                                                           #
 # Dieses Script sucht bei MS im Web auf den angeführten URLS nach aktuelle  Buildnumbers der Windows Server #
-# Betriebssysteme 2016, 2019 und 2022.                                                                      #
+# Betriebssysteme 2016, 2019, 2022 und 2025                                                                 #
 #############################################################################################################
 
 $months = @{
@@ -96,6 +96,31 @@ If ($request2022.StatusCode -eq 200) {
     }
 }
 
+$request2025 = Invoke-WebRequest "https://support.microsoft.com/en-gb/help/5020032" –UseBasicParsing
+If ($request2025.StatusCode -eq 200) {
+    $BuildNumber = [regex]::Matches($request2025.Content, 'href="([a-z0-9-\/]*)">([a-zA-Z]*) ([0-9]{1,2}), ([0-9]{4}).*?(KB[0-9]*) \(OS Build 26100.([0-9]*)\)(?: ([a-zA-Z-]*)<\/a>)?')
+    if ($BuildNumber.Count -gt 0) {
+        $CurrentServer2025Raw = [PSCustomObject]@{
+            'OS Name'      = "Windows Server 2025"
+            'OS Version'   = "26100"
+            'OS build'     = $BuildNumber[0].Groups[6].Value
+            'Released'     = "$($BuildNumber[0].Groups[3].Value). $($months.GetEnumerator().Where({$_.Value -contains $($BuildNumber[0].Groups[2].Value)}).Name) $($BuildNumber[0].Groups[4].Value)"
+            'URL'          = "https://support.microsoft.com$($BuildNumber[0].Groups[1].Value)"
+            'KB'           = $BuildNumber[0].Groups[5].Value
+            #'Info'     = $BuildNumber[0].Groups[7].Value                                
+        }
+        $LastServer2025Raw = [PSCustomObject]@{
+            'OS Name'      = "Windows Server 2025"
+            'OS Version'   = "26100"
+            'OS build'     = $($BuildNumber[1].Groups[6].Value)
+            'Released'     = "$($BuildNumber[1].Groups[3].Value). $($months.GetEnumerator().Where({$_.Value -contains $($BuildNumber[1].Groups[2].Value)}).Name) $($BuildNumber[1].Groups[4].Value)"
+            'URL'          = "https://support.microsoft.com$($BuildNumber[1].Groups[1].Value)"
+            'KB'           = $BuildNumber[1].Groups[5].Value
+            #'Info'     = $BuildNumber[1].Groups[7].Value                                
+        }
+    }
+}
+
 #$LastServer2022Raw.Released = $months.GetEnumerator().Where({$_.Value -contains $($BuildNumber[1].Groups[2].Value)}).Name
 
 
@@ -105,7 +130,9 @@ $BuildNumberJson =
   [PSCustomObject]@{Last2019=$LastServer2019Raw},
   [PSCustomObject]@{Curr2019=$CurrentServer2019Raw},
   [PSCustomObject]@{Last2022=$LastServer2022Raw},
-  [PSCustomObject]@{Curr2022=$CurrentServer2022Raw})
+  [PSCustomObject]@{Curr2022=$CurrentServer2022Raw},
+  [PSCustomObject]@{Last2025=$LastServer2025Raw},
+  [PSCustomObject]@{Curr2025=$CurrentServer2025Raw})
 
 $BuildNumberJson | ConvertTo-Json -depth 100 | Out-File "C:\MR\buildnumbers.json"
 
