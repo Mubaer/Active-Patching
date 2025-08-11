@@ -22,17 +22,33 @@ REM C:\ProgramDATA\SolarWinds MSP
 
 # Andere Methode (remove Windows Agent deinstalliert auch alle andere Software)
 
-$computername = "srvrdsh05"
-$softwareName = "Windows Agent"
 
+$computernames = Get-Content -Path "C:\temp\vms.txt"
+
+$softwareName = "Icinga 2"
+
+foreach ($computername in $computernames){
+$computername
 $software = Get-WmiObject Win32_Product -ComputerName $computername | Where-Object { $_.Name -eq $softwareName }
+
 if ($software) {
     $software.Uninstall()
 } else {
     Write-Host "$softwareName is not installed on $computername"
 }
 
-# oder
+$ErrorActionPreference = "Silentlycontinue"
+
+Remove-Item "\\$computername\c$\mr_managed_it" -Recurse -Force
+Remove-Item "\\$computername\c$\mrdaten" -Recurse -Force
+Remove-Item "\\$computername\c$\ProgramData\Icinga2" -Recurse -Force
+Remove-Item "\\$computername\c$\Program Files\Icinga2" -Recurse -Force
+Remove-Item "\\$computername\c$\Program Files\WindowsPowershell\Modules\icinga-powershell-framework" -Recurse -Force
+Remove-Item "\\$computername\c$\Program Files\WindowsPowershell\Modules\icinga-powershell-plugins" -Recurse -Force
+
+}
+
+# oder (andere Möglichkeit)
 
 $computername = "RemoteComputerName"
 $softwareName = "SoftwareName"
