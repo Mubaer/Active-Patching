@@ -7,7 +7,7 @@ Write-host "Usage: Please add 'local' or 'remote' to tell the WSUS-Server where 
 Exit 1
 }
 
-# Version 2.0.2 added sleep after iisreset and wsus-services restart
+# Version 2.0.3 added computer groups DNS and DHCP
 
 # Prepare OS and Disks
 $disk_already_in_use = 0
@@ -292,6 +292,8 @@ $wsus.CreateComputerTargetGroup("MR_Server_RDS")
 $wsus.CreateComputerTargetGroup("MR_Server_CA")
 $wsus.CreateComputerTargetGroup("MR_Server_PR")
 $wsus.CreateComputerTargetGroup("MR_Server_File")
+$wsus.CreateComputerTargetGroup("MR_Server_DNS")
+$wsus.CreateComputerTargetGroup("MR_Server_DHCP")
 $wsus.CreateComputerTargetGroup("MR_System")
 # Configure Synchronizations
 write-host 'Enabling WSUS Automatic Synchronisation'
