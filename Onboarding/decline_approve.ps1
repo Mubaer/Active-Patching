@@ -21,7 +21,7 @@ break
 
 }
 
-$version = "2.0.2" # cleanup database ausgelagert
+$version = "2.0.3" # added some Server groups
 
 Start-Transcript -Path "C:\mr_managed_it\Logs\decline_approve.txt" #-Append
 
@@ -51,7 +51,7 @@ Get-WsusServer -Name localhost -PortNumber 8530
 
 $date1 = $(Get-Date).AddDays(-180)
 $date2 = $(Get-Date).AddDays(-30)
-$GroupsAll    = Get-PSWSUSGroup -Name 'MR_Server', 'MR_Server_SQL', 'MR_Server_HV', 'MR_Server_DC', 'MR_Server_RDS', 'MR_Server_CA', 'MR_Server_EX', 'MR_Server_File', 'MR_Server_PR'
+$GroupsAll    = Get-PSWSUSGroup -Name 'MR_Server', 'MR_Server_SQL', 'MR_Server_HV', 'MR_Server_DC', 'MR_Server_DHCP', 'MR_Server_DNS', 'MR_Server_RDS', 'MR_Server_CA', 'MR_Server_EX', 'MR_Server_File', 'MR_Server_PR'
 $GroupsSQL    = Get-PSWSUSGroup -Name 'MR_Server_SQL'
 $GroupsSystem = Get-PSWSUSGroup -Name 'MR_System'
 
