@@ -159,6 +159,8 @@ function Test-PendingReboot {
 
 Clear-Host
 
+
+
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 $check_version = "2.2.3" #check version number pswu-files
 
@@ -372,6 +374,30 @@ $websites = "True"
 }
 
 # Check installed roles
+
+#############################################################################################################################
+#                                                                                                                           #
+# Mito-Rolle                            Windows-Rolle                                                                       #
+# Hypervisor (HV)                       Hyper-V                                                                             #
+# Domain Controller (DC)                AD-Domain-Services                                                                  #
+# EMail / Exchange                      keine Rolle                                                                         #
+# SQL Server (SQL)                      keine Rolle                                                                         #
+# RDS Server (RDS)                      Remote-Desktop-Services                                                             #
+# CA Server (CA)                        AD-Certificate                                                                      #
+# File Server (File)                    FileAndStorage-Services                                                             #
+# Print Server (PR)                     Print-Services                                                                      #
+# DNS Server (DNS)                      DNS                                                                                 #
+# DHCP Server (DHCP)                    DHCP                                                                                #
+# Backup Server                         keine Rolle                                                                         #
+# Applikationen                         keine Rolle                                                                         #
+# FTP Server                            keine Rolle                                                                         #
+# MR Management Server  (MGMT)          keine Rolle                                                                         #
+# MR WSUS Server (WSUS)                 UpdateServices                                                                      #
+# Kunde WSUS Server (WSUS)              UpdateServices                                                                      #
+# Kunde Kerberos Server (KERBEROS)      AD-Domain-Services                                                                  #
+#                                                                                                                           #
+#############################################################################################################################
+
 $roles = @()
 $allroles = ""
 $roles = $(Get-WindowsFeature | Where-Object{ $_.Installed }  | Select-Object name )
