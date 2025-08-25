@@ -21,7 +21,7 @@ break
 
 }
 
-$version = "2.0.3" # added some Server groups
+$version = "2.2.0" # added revoke mode
 
 Start-Transcript -Path "C:\mr_managed_it\Logs\decline_approve.txt" #-Append
 
@@ -54,13 +54,6 @@ $date2 = $(Get-Date).AddDays(-30)
 $GroupsAll    = Get-PSWSUSGroup -Name 'MR_Server', 'MR_Server_SQL', 'MR_Server_HV', 'MR_Server_DC', 'MR_Server_DHCP', 'MR_Server_DNS', 'MR_Server_RDS', 'MR_Server_CA', 'MR_Server_EX', 'MR_Server_File', 'MR_Server_PR'
 $GroupsSQL    = Get-PSWSUSGroup -Name 'MR_Server_SQL'
 $GroupsSystem = Get-PSWSUSGroup -Name 'MR_System'
-
-# Step 0 Reset all approvements and declines
-#Write-Host "Reset all approvals ..."
-#Get-PSWSUSUpdate -ApprovedState Declined | Approve-PSWSUSUpdate -Group $GroupsSystem -Action NotApproved
-#Get-WsusUpdate -Approval Approved | ForEach-Object { $_.Update.GetUpdateApprovals() | ForEach-Object Delete }
-
-# If Modus = Approve machen wir weiter mit einer neuen Approve-Aktion, ansonsten belassen wir es beim Revoke
 
 if($modus -like "approve"){
 
@@ -167,6 +160,21 @@ if($Groups){
 
         }
 
+}else{
+
+        # Step 0 Reset all approvements and declines
+        Write-Host "Reset all approvals ..."
+        Get-PSWSUSUpdate -ApprovedState Declined | Approve-PSWSUSUpdate -Group $GroupsSystem -Action NotApproved
+        Get-WsusUpdate -Approval Approved | ForEach-Object { $_.Update.GetUpdateApprovals() | ForEach-Object Delete }
+
+        $wsus = (get-wsusserver).GetConfiguration()
+        if( $wsus.HostBinariesOnMicrosoftUpdate -like "False"){
+
+                & "C:\Program Files\Update Services\Tools\WSUSutil.exe" reset
+
+        }
+
+
 }
 
 
@@ -177,15 +185,6 @@ Get-PSWSUSUpdate -ToCreationDate $date1 | Where-Object {$_.IsDeclined -match 'Fa
 Get-PSWSUSUpdate -IncludeText "Security Intelligence Update" -ToCreationDate $date2 | Where-Object {$_.IsDeclined -match 'False'} | Deny-PSWSUSUpdate
 Get-PSWSUSUpdate -IncludeText "Edge-" -ToCreationDate $date2 | Where-Object {$_.IsDeclined -match 'False'} | Deny-PSWSUSUpdate
 
-
-# Reset WSUS for local cache configurations
-
-#$wsus = (get-wsusserver).GetConfiguration()
-#if( $wsus.HostBinariesOnMicrosoftUpdate -like "False"){
-
-#   & "C:\Program Files\Update Services\Tools\WSUSutil.exe" reset
-
-#}
 
 
 }else{
