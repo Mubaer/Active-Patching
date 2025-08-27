@@ -20,7 +20,7 @@ REM C:\ProgramDATA\MspPlatform
 REM C:\ProgramDATA\N-able Technologies
 REM C:\ProgramDATA\SolarWinds MSP
 
-# Andere Methode (remove Windows Agent deinstalliert auch alle andere Software)
+# Andere Methode (remove N-Central Windows Agent deinstalliert auch alle andere Software)
 
 
 $computernames = Get-Content -Path "C:\temp\vms.txt"
