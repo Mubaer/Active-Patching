@@ -1,5 +1,5 @@
 ######################################################################################################
-# Script zum Entfernen von Clients aus der WSUS-Datenbank.                                           #
+# Script zum Entfernen von Clients aus Icinga2 / WSUS-Datenbank.                                     #
 # evtl. wenn der Kunde oder wir assets aus der zu patchenden Umgebung entfernt haben.                #
 #                                                                                                    #
 # Peter Ziegler 08/2025                                                                              #
