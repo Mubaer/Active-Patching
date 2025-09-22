@@ -32,6 +32,8 @@ Remove-Item "\\$computername\c$\Program Files\WindowsPowershell\Modules\icinga-p
 Remove-Item "\\$computername\c$\Program Files\WindowsPowershell\Modules\PSWindowsUpdate" -Recurse -Force
 
 # Registry-Werte fuer Patching zuruecksetzen
+# Loeschen Scheduled Task FlightCheck
+# Loeschen Firewall-Regel
 Invoke-Command -ComputerName $ComputerName -ScriptBlock {
     $KeyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"
     $KeyPathAU = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"

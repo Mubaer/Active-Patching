@@ -96,7 +96,7 @@ If ($request2022.StatusCode -eq 200) {
     }
 }
 
-$request2025 = Invoke-WebRequest "https://support.microsoft.com/en-gb/help/5020032" –UseBasicParsing
+$request2025 = Invoke-WebRequest "https://support.microsoft.com/en-gb/help/5047442" –UseBasicParsing
 If ($request2025.StatusCode -eq 200) {
     $BuildNumber = [regex]::Matches($request2025.Content, 'href="([a-z0-9-\/]*)">([a-zA-Z]*) ([0-9]{1,2}), ([0-9]{4}).*?(KB[0-9]*) \(OS Build 26100.([0-9]*)\)(?: ([a-zA-Z-]*)<\/a>)?')
     if ($BuildNumber.Count -gt 0) {
