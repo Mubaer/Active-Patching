@@ -53,3 +53,16 @@ Why Would I Need To Use Foreground Priority Mode?
 If the WSUS server is behind a firewall or a proxy server and the proxy server environment does not support the HTTP 1.1 range request function, it may have trouble downloading files from Microsoft in background priority mode. If you cannot modify the proxy server to allow the HTTP 1.1 range request function, configure BITS to work in foreground mode.
 
 #>
+
+$vm = 'jh-rdsh01'
+
+Get-WUSettings -ComputerName $vm
+Get-WUHistory  -ComputerName $vm -Last 10
+Get-WURebootStatus -ComputerName $vm
+
+
+get-wulist -ComputerName $vm
+
+
+#Target version for Windows Updates breaks Windows Update with 0x8024500C error
+# HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\DisableDualScan 0x00000001 DWORD

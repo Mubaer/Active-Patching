@@ -1,5 +1,5 @@
 Import-Module pswindowsupdate
-$version = "2.2.5" # added TargetGroups Check for special customer
+$version = "2.2.6" # added TargetGroups DNS and DHCP
 $Transscript_path = "C:\mr_managed_it\Logs\active_patching." + (Get-Date).ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"
 "Script version: " + $version | Out-File $Transscript_path -Append
 Get-WsusServer -Name localhost -PortNumber 8530
@@ -7,11 +7,11 @@ Get-WsusServer -Name localhost -PortNumber 8530
 #$VMs = get-wsuscomputer -NameIncludes "hpim" | Select-Object fulldomainname
 $MBs = Get-Content -Path "C:\mr_managed_it\Scripts\mbs_hosts.txt"
 $NONADs = Get-Content -Path "C:\mr_managed_it\Scripts\nonad_hosts.txt"
-$TargetGroups = "MR_Server", "MR_Server_SQL", "MR_Server_HV", "MR_Server_DC", "MR_Server_RDS", "MR_Server_CA", "MR_Server_EX", "MR_Server_File", "MR_Server_PR"
+$TargetGroups = "MR_Server", "MR_Server_SQL", "MR_Server_HV", "MR_Server_DC", "MR_Server_RDS", "MR_Server_CA", "MR_Server_EX", "MR_Server_File", "MR_Server_PR",  "MR_Server_DHCP",  "MR_Server_DNS"
 $ArrayList = $(Get-WsusComputer -ComputerTargetGroups $TargetGroups).FullDomainName
 "List of vms: " + $ArrayList | Out-File $Transscript_path -Append
 
-# Wenn einzelne Server ausgenommen werden sollen, einfach in die Zeile 15 nicht auskommentieren und was sinnvolles reinschreiben. Evtl. die Zeile 15 mehrfach verwenden.
+# Wenn einzelne Server ausgenommen werden sollen, einfach die Zeile 16 nicht auskommentieren und was sinnvolles reinschreiben. Evtl. die Zeile 16 mehrfach verwenden.
 [System.Collections.ArrayList]$VMS = $ArrayList
 #$vms.Remove("mrm-stg-22pswu1.mrm.stg")
 "Removing assets from list ..."  | Out-File $Transscript_path -Append
