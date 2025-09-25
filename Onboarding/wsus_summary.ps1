@@ -22,7 +22,7 @@ foreach ($summary in $updateSummaries) {
         NotInstalledCount                      = $summary.NotInstalledCount
         InstalledCount                         = $summary.InstalledCount
         FailedCount                            = $summary.FailedCount
-        InstalledOrNotApplicablePercentage     = if ($total -ne 0){(($summary.NotApplicableCount + $summary.InstalledCount) / $total) * 100}else{0}
+        InstalledOrNotApplicablePercentage     = if ($total -ne 0){([Math]::Round((($summary.NotApplicableCount + $summary.InstalledCount) / $total) * 100, 2)).tostring() + '%'}else{[string]0 + '%'}
     }
 
     $results.Add($entry) > $null
@@ -30,3 +30,5 @@ foreach ($summary in $updateSummaries) {
 
 $resultsArray = $results.ToArray();
 $resultsArray;
+
+foreach ($test in $resultsArray){$test;" "}
