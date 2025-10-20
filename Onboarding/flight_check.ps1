@@ -162,7 +162,7 @@ Clear-Host
 
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.3" #check version number pswu-files
+$check_version = "2.2.4" #check WSUS Downloaded bytes
 
 # Part 1
 # System health parameters
@@ -586,7 +586,13 @@ $dlsTBTD = $dls.TotalBytesToDownload
 if ($dls -like $null){
     $dlsDB ="N/A"
     $dlsTBTD = "N/A"
-}
+    $dlsDownloadSuccess = "N/A"}else{
+
+if($dlsdb -eq $dlsTBTD){
+$dlsDownloadSuccess = "True"
+}else{
+$dlsDownloadSuccess = "False"}
+    }
 
 # Check WSUS groups count
 Import-Module pswindowsupdate
@@ -692,6 +698,7 @@ $result += "Systemsettings WSUS last sync Start: " + $lastSyncStart    + "`r`n"
 $result += "Systemsettings WSUS next sync Start: " + $nextSyncStart    + "`r`n"
 $result += "Systemsettings WSUS Downloaded Bytes: " + $dlsDB    + "`r`n"
 $result += "Systemsettings WSUS Bytes to download: " + $dlsTBTD    + "`r`n"
+$result += "Systemsettings WSUS DownloadSuccess: " + $dlsDownloadSuccess    + "`r`n"
 $result += "Systemsettings WSUS groups count: " + $GroupsAll  + "`r`n"
 $result += "Systemsettings WSUS endpoint: " + $wsus_endpoint    + "`r`n"
 $result += "Systemsettings File DoNotDelete exists: " + $dnd    + "`r`n"
