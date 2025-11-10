@@ -159,10 +159,10 @@ function Test-PendingReboot {
 
 Clear-Host
 
-
+$ErrorActionPreference = "SilentlyContinue"
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.4" #check WSUS Downloaded bytes
+$check_version = "2.2.7" #reformat services and roles
 
 # Part 1
 # System health parameters
@@ -400,15 +400,18 @@ $websites = "True"
 
 $roles = @()
 $allroles = ""
-$roles = $(Get-WindowsFeature | Where-Object{ $_.Installed }  | Select-Object name )
+$roles = $(Get-WindowsOptionalFeature -Online | ? {$_.State -like "Enabled"}).FeatureName
 
+# komma am anfang und Ende einbauen
+$allroles += ","
 foreach ($role in $roles){
 
-$allroles += $role.Name
+$allroles += $role
 $allroles += ", "
 
 }
-$allroles = ($allroles).TrimEnd(", ")
+
+$allroles = ($allroles).TrimEnd(" ")
 
 # Check DNS A-Record
 $dnsname = ""
@@ -431,13 +434,13 @@ $dnsrecord = "False"
 # Get all running services
 
 $services = $(get-service | Where-Object {$_.status -like "Running"}).Name
-
+$running_services = ","
 foreach ($service in $services){
 $running_services += $service + ", "
 
 }
 
-$running_services = ($running_services).TrimEnd(", ")
+$running_services = ($running_services).TrimEnd(" ")
 
 # Check AP scheduled Tasks
 
@@ -597,6 +600,7 @@ $dlsDownloadSuccess = "False"}
 # Check WSUS groups count
 Import-Module pswindowsupdate
 Connect-PSWSUSServer -WsusServer localhost -Port 8530
+$GroupsAll = ""
 $GroupsAll = Get-PSWSUSGroup | Where-Object {$_.Name -match "MR_"}
 
 if($GroupsAll){
