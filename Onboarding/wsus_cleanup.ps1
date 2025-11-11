@@ -20,3 +20,4 @@ Get-WsusServer | Invoke-WsusServerCleanup –CleanupObsoleteUpdates -CleanupUnne
 Set-Location "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn"
 .\SQLCMD.EXE -S np:\\.\pipe\MICROSOFT##WID\tsql\query -i "C:\Scripts\WSUSDBMaintenance.sql"
 
+##
