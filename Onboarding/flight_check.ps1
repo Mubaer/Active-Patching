@@ -400,9 +400,9 @@ $websites = "True"
 
 $roles = @()
 $allroles = ""
-$roles = $(Get-WindowsOptionalFeature -Online | ? {$_.State -like "Enabled"}).FeatureName
+$roles = $(Get-WindowsOptionalFeature -Online | Where-Object {$_.State -like "Enabled"}).FeatureName
 
-# komma am anfang und Ende einbauen
+
 $allroles += ","
 foreach ($role in $roles){
 
