@@ -368,10 +368,11 @@ if ($response.StatusCode -eq 200) {
 }
 
 if ($websites -eq 3){
-
 $websites = "True"
-
+}else{
+$websites = "False"
 }
+
 
 # Check installed roles
 
