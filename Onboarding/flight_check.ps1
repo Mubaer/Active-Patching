@@ -361,7 +361,7 @@ $update_websites = @(
 
 foreach ($uri in $update_websites){
 $response = ""
-$response = Invoke-WebRequest -Uri $uri -Method Head -DisableKeepAlive
+$response = Invoke-WebRequest -Uri $uri -Method Head -DisableKeepAlive -UseBasicParsing
 if ($response.StatusCode -eq 200) {
     $websites += 1
 }
@@ -402,7 +402,7 @@ $roles = @()
 $allroles = ""
 $roles = $(Get-WindowsOptionalFeature -Online | Where-Object {$_.State -like "Enabled"}).FeatureName
 
-#
+
 $allroles += ","
 foreach ($role in $roles){
 
