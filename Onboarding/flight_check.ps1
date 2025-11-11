@@ -162,7 +162,7 @@ Clear-Host
 $ErrorActionPreference = "SilentlyContinue"
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.7" #reformat services and roles
+$check_version = "2.2.8" #ms websites unreachable without basicparsing
 
 # Part 1
 # System health parameters
