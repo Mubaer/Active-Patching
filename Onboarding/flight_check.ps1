@@ -162,7 +162,7 @@ Clear-Host
 $ErrorActionPreference = "SilentlyContinue"
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.8" #ms websites unreachable without basicparsing
+$check_version = "2.2.9" #added icinga versions
 
 # Part 1
 # System health parameters
@@ -525,6 +525,16 @@ if([System.IO.File]::Exists($iccert1) -and [System.IO.File]::Exists($iccert2) -a
 $iccerts = "True"}else{
 $iccerts = "False"}
 
+# check for Icinga versions
+
+$ipf = "False"
+$ipp = "False"
+$icv = "False"
+
+$ipf = (Get-Module -ListAvailable -Name icinga-powershell-framework).Version.ToString()
+$ipp = (Get-Module -ListAvailable -Name icinga-powershell-plugins).Version.ToString()
+$icv = (Get-IcingaAgentVersion).Full
+
 # WSUS endpoint
 $server = Get-WsusServer
 $config = $server.GetConfiguration()
@@ -714,6 +724,9 @@ $result += "Systemsettings PSWU_MBS version: " + $pswu_mbs    + "`r`n"
 $result += "Systemsettings PSWU_NONAD version: " + $pswu_nonad    + "`r`n"
 $result += "Systemsettings Decline_Approve version: " + $da    + "`r`n"
 $result += "Systemsettings File Icinga Certs exist: " + $iccerts    + "`r`n"
+$result += "Systemsettings Icinga Powershell Framework: " + $ipf    + "`r`n"
+$result += "Systemsettings Icinga Powershell Plugins: " + $ipp    + "`r`n"
+$result += "Systemsettings Icinga Client version: " + $icv    + "`r`n"
 $result += "Systemsettings Icinga satellite reachable: " + $ic80.TcpTestSucceeded    + "`r`n"
 $result += "Systemsettings Icinga web repo reachable: " + $ic443.TcpTestSucceeded    + "`r`n"
 $result += "Systemsettings PSRemote enabled: " + $wsman    + "`r`n"
