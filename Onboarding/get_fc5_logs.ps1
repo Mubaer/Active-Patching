@@ -1,6 +1,6 @@
 ############################################################################################################################################
 #                                                                                                                                          #
-#  Dieses Script holt von allen Wsindows-Server-Assets die FC5-Logdateien                                                                  #
+#  Dieses Script holt von allen Windows-Server-Assets die FC5-Logdateien                                                                   #
 #  Peter Ziegler, November 2025                                                                                                            #
 #  MR Datentechnik                                                                                                                         #
 #                                                                                                                                          #
