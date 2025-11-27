@@ -10,7 +10,7 @@ $ruleexists = Get-NetFirewallRule -DisplayName "Enable PSUpdate" -ea SilentlyCon
 
 if( -not $ruleexists){
 
-New-NetFirewallRule -DisplayName "Enable PSUpdate" -Direction Inbound -Action Allow -Enabled True -Protocol tcp -LocalPort 80 -Group "MR PSWindowsUpdate"
+New-NetFirewallRule -DisplayName "Enable PSUpdate" -Direction Inbound -Action Allow -Enabled True -Protocol tcp -LocalPort 80 -Group "MR PSWindowsUpdate" -RemoteAddress 10.254.244.52
 $ruleexists = Get-NetFirewallRule -DisplayName "Enable PSUpdate"
 $ports = @("135", "445", "5985", "49660-49670")
 
