@@ -162,7 +162,8 @@ Clear-Host
 $ErrorActionPreference = "SilentlyContinue"
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.10" #time deviation intl.
+$check_version = "2.2.11" #added user info
+$user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 
 # Part 1
 # System health parameters
@@ -672,6 +673,7 @@ $ic443 = tnc -port 443 -ComputerName $icweb -ErrorAction SilentlyContinue
 $result  = "Hostname: " + ([System.Net.Dns]::GetHostByName($env:computerName)).HostName +  "`r`n"
 $result += "Date-Time: " + $date             + "`r`n"
 $result += "Check-Version: " + $check_version    + "`r`n"
+$result += "User running check: " + $user    + "`r`n"
 $result += "Systemhealth CPUs: " + $CPUS        + "`r`n"
 $result += "Systemhealth RAM: " + $RAM         + "`r`n"
 $result += "Systemhealth Diskrelative: " + $diskrel    + "`r`n"
