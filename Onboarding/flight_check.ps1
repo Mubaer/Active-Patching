@@ -159,11 +159,8 @@ function Test-PendingReboot {
 
 Clear-Host
 
-$ErrorActionPreference = "SilentlyContinue"
-
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.11" #added user info
-$user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$check_version = "2.2.4" #usebasicparsing
 
 # Part 1
 # System health parameters
@@ -202,7 +199,7 @@ $diskrel = [Math]::Round($disk.Freespace / $disk.Size * 100)
 $diskgb = [Math]::Round($disk.Freespace / 1GB)
 
 # Zeitabweichung
-$time = ((($(w32tm /query /status)[4]) -split ": ")[1]).trimend('s')
+$time = ((($(w32tm /query /status)[4]) -split " ")[1]).trimend('s')
 
 # Windows activated?
 $licensed = $(Get-ActivationStatus).Status
@@ -319,7 +316,7 @@ $port_ap += 1
 
 }
 
-if ($port_ap -gt 3){
+if ($port_ap -gt 2){
 $port_ap = "True"
 }else{
 $port_ap = "False"}
@@ -327,7 +324,7 @@ $port_ap = "False"}
 # Check WSUS connect
 
 $wsus = (Get-itemproperty -ea SilentlyContinue -path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -name WUServer).WUServer
-$response8530 = Invoke-WebRequest -Uri $wsus -Method Head -DisableKeepAlive
+$response8530 = Invoke-WebRequest -Uri $wsus -Method Head -DisableKeepAlive -UseBasicParsing
 if ($response8530.StatusCode -eq 200) {
 $wsus8530 = "True"}else{
 $Wsus8530 = "False"
@@ -335,7 +332,7 @@ $Wsus8530 = "False"
 
 $wsus = ($wsus) -split (":",3)
 $wsus80 = $wsus[0] + ":" + $wsus[1]
-$response80 = Invoke-WebRequest -Uri $wsus80 -Method Head -DisableKeepAlive
+$response80 = Invoke-WebRequest -Uri $wsus80 -Method Head -DisableKeepAlive -UseBasicParsing
 if ($response80.StatusCode -eq 200) {
 $wsus80 = "True"}else{
 $Wsus80 = "False"
@@ -369,51 +366,23 @@ if ($response.StatusCode -eq 200) {
 }
 
 if ($websites -eq 3){
+
 $websites = "True"
-}else{
-$websites = "False"
+
 }
 
-
 # Check installed roles
-
-#############################################################################################################################
-#                                                                                                                           #
-# Mito-Rolle                            Windows-Rolle                                                                       #
-# Hypervisor (HV)                       Hyper-V                                                                             #
-# Domain Controller (DC)                AD-Domain-Services                                                                  #
-# EMail / Exchange                      keine Rolle                                                                         #
-# SQL Server (SQL)                      keine Rolle                                                                         #
-# RDS Server (RDS)                      Remote-Desktop-Services                                                             #
-# CA Server (CA)                        AD-Certificate                                                                      #
-# File Server (File)                    FileAndStorage-Services                                                             #
-# Print Server (PR)                     Print-Services                                                                      #
-# DNS Server (DNS)                      DNS                                                                                 #
-# DHCP Server (DHCP)                    DHCP                                                                                #
-# Backup Server                         keine Rolle                                                                         #
-# Applikationen                         keine Rolle                                                                         #
-# FTP Server                            keine Rolle                                                                         #
-# MR Management Server  (MGMT)          keine Rolle                                                                         #
-# MR WSUS Server (WSUS)                 UpdateServices                                                                      #
-# Kunde WSUS Server (WSUS)              UpdateServices                                                                      #
-# Kunde Kerberos Server (KERBEROS)      AD-Domain-Services                                                                  #
-#                                                                                                                           #
-#############################################################################################################################
-
 $roles = @()
 $allroles = ""
-$roles = $(Get-WindowsOptionalFeature -Online | Where-Object {$_.State -like "Enabled"}).FeatureName
+$roles = $(Get-WindowsFeature | Where-Object{ $_.Installed }  | Select-Object name )
 
-
-$allroles += ","
 foreach ($role in $roles){
 
-$allroles += $role
+$allroles += $role.Name
 $allroles += ", "
 
 }
-
-$allroles = ($allroles).TrimEnd(" ")
+$allroles = ($allroles).TrimEnd(", ")
 
 # Check DNS A-Record
 $dnsname = ""
@@ -436,13 +405,13 @@ $dnsrecord = "False"
 # Get all running services
 
 $services = $(get-service | Where-Object {$_.status -like "Running"}).Name
-$running_services = ","
+
 foreach ($service in $services){
 $running_services += $service + ", "
 
 }
 
-$running_services = ($running_services).TrimEnd(" ")
+$running_services = ($running_services).TrimEnd(", ")
 
 # Check AP scheduled Tasks
 
@@ -526,16 +495,6 @@ if([System.IO.File]::Exists($iccert1) -and [System.IO.File]::Exists($iccert2) -a
 $iccerts = "True"}else{
 $iccerts = "False"}
 
-# check for Icinga versions
-
-$ipf = "False"
-$ipp = "False"
-$icv = "False"
-
-$ipf = (Get-Module -ListAvailable -Name icinga-powershell-framework).Version.ToString()
-$ipp = (Get-Module -ListAvailable -Name icinga-powershell-plugins).Version.ToString()
-$icv = (Get-IcingaAgentVersion).Full
-
 # WSUS endpoint
 $server = Get-WsusServer
 $config = $server.GetConfiguration()
@@ -601,18 +560,11 @@ $dlsTBTD = $dls.TotalBytesToDownload
 if ($dls -like $null){
     $dlsDB ="N/A"
     $dlsTBTD = "N/A"
-    $dlsDownloadSuccess = "N/A"}else{
-
-if($dlsdb -eq $dlsTBTD){
-$dlsDownloadSuccess = "True"
-}else{
-$dlsDownloadSuccess = "False"}
-    }
+}
 
 # Check WSUS groups count
 Import-Module pswindowsupdate
 Connect-PSWSUSServer -WsusServer localhost -Port 8530
-$GroupsAll = ""
 $GroupsAll = Get-PSWSUSGroup | Where-Object {$_.Name -match "MR_"}
 
 if($GroupsAll){
@@ -673,7 +625,6 @@ $ic443 = tnc -port 443 -ComputerName $icweb -ErrorAction SilentlyContinue
 $result  = "Hostname: " + ([System.Net.Dns]::GetHostByName($env:computerName)).HostName +  "`r`n"
 $result += "Date-Time: " + $date             + "`r`n"
 $result += "Check-Version: " + $check_version    + "`r`n"
-$result += "User running check: " + $user    + "`r`n"
 $result += "Systemhealth CPUs: " + $CPUS        + "`r`n"
 $result += "Systemhealth RAM: " + $RAM         + "`r`n"
 $result += "Systemhealth Diskrelative: " + $diskrel    + "`r`n"
@@ -715,7 +666,6 @@ $result += "Systemsettings WSUS last sync Start: " + $lastSyncStart    + "`r`n"
 $result += "Systemsettings WSUS next sync Start: " + $nextSyncStart    + "`r`n"
 $result += "Systemsettings WSUS Downloaded Bytes: " + $dlsDB    + "`r`n"
 $result += "Systemsettings WSUS Bytes to download: " + $dlsTBTD    + "`r`n"
-$result += "Systemsettings WSUS DownloadSuccess: " + $dlsDownloadSuccess    + "`r`n"
 $result += "Systemsettings WSUS groups count: " + $GroupsAll  + "`r`n"
 $result += "Systemsettings WSUS endpoint: " + $wsus_endpoint    + "`r`n"
 $result += "Systemsettings File DoNotDelete exists: " + $dnd    + "`r`n"
@@ -726,9 +676,6 @@ $result += "Systemsettings PSWU_MBS version: " + $pswu_mbs    + "`r`n"
 $result += "Systemsettings PSWU_NONAD version: " + $pswu_nonad    + "`r`n"
 $result += "Systemsettings Decline_Approve version: " + $da    + "`r`n"
 $result += "Systemsettings File Icinga Certs exist: " + $iccerts    + "`r`n"
-$result += "Systemsettings Icinga Powershell Framework: " + $ipf    + "`r`n"
-$result += "Systemsettings Icinga Powershell Plugins: " + $ipp    + "`r`n"
-$result += "Systemsettings Icinga Client version: " + $icv    + "`r`n"
 $result += "Systemsettings Icinga satellite reachable: " + $ic80.TcpTestSucceeded    + "`r`n"
 $result += "Systemsettings Icinga web repo reachable: " + $ic443.TcpTestSucceeded    + "`r`n"
 $result += "Systemsettings PSRemote enabled: " + $wsman    + "`r`n"
