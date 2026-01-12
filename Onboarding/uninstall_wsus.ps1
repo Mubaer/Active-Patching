@@ -2,7 +2,7 @@
 
 Get-ScheduledTask -TaskName "MR Active*" | Unregister-ScheduledTask -Confirm:$false
 Get-ScheduledTask -TaskName "MR PostflightCheck" | Unregister-ScheduledTask -Confirm:$false
-Get-ScheduledTask -TaskName "WSUS_Cleanup" | Unregister-ScheduledTask -Confirm:$false
+Get-ScheduledTask -TaskName "WSUS Cleanup" | Unregister-ScheduledTask -Confirm:$false
 Get-ScheduledTask -TaskName "MR FlightCheck" | Unregister-ScheduledTask -Confirm:$false
 Get-ScheduledTask -TaskName "MR Set Credentials" | Unregister-ScheduledTask -Confirm:$false
 
