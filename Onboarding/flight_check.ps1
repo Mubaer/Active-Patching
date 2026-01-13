@@ -160,7 +160,7 @@ function Test-PendingReboot {
 Clear-Host
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.4" #usebasicparsing
+$check_version = "2.2.5" # check downloadsuccess on WSUS
 
 # Part 1
 # System health parameters
@@ -561,6 +561,10 @@ if ($dls -like $null){
     $dlsDB ="N/A"
     $dlsTBTD = "N/A"
 }
+$dlsucc = "False"
+if ($dlsDB -eq $dlsTBTD){
+$dlsucc = "True"
+}
 
 # Check WSUS groups count
 Import-Module pswindowsupdate
@@ -666,6 +670,7 @@ $result += "Systemsettings WSUS last sync Start: " + $lastSyncStart    + "`r`n"
 $result += "Systemsettings WSUS next sync Start: " + $nextSyncStart    + "`r`n"
 $result += "Systemsettings WSUS Downloaded Bytes: " + $dlsDB    + "`r`n"
 $result += "Systemsettings WSUS Bytes to download: " + $dlsTBTD    + "`r`n"
+$result += "Systemsettings WSUS DownloadSuccess: " + $dlsucc    + "`r`n"
 $result += "Systemsettings WSUS groups count: " + $GroupsAll  + "`r`n"
 $result += "Systemsettings WSUS endpoint: " + $wsus_endpoint    + "`r`n"
 $result += "Systemsettings File DoNotDelete exists: " + $dnd    + "`r`n"
