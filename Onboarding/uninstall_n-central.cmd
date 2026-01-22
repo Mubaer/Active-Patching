@@ -23,7 +23,7 @@ REM C:\ProgramDATA\SolarWinds MSP
 # Andere Methode (remove N-Central Windows Agent deinstalliert auch alle andere Software)
 
 
-$computernames = Get-Content -Path "C:\temp\vms.txt"
+$computernames = $get-wsuscomputer).FullDomainName
 
 $softwareName = "Icinga 2"
 

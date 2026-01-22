@@ -160,7 +160,7 @@ function Test-PendingReboot {
 Clear-Host
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.5" # check downloadsuccess on WSUS
+$check_version = "2.2.6" #internationalize time dispersion
 
 # Part 1
 # System health parameters
@@ -199,7 +199,7 @@ $diskrel = [Math]::Round($disk.Freespace / $disk.Size * 100)
 $diskgb = [Math]::Round($disk.Freespace / 1GB)
 
 # Zeitabweichung
-$time = ((($(w32tm /query /status)[4]) -split " ")[1]).trimend('s')
+$time = ((($(w32tm /query /status)[4]) -split ": ")[1]).trimend('s')
 
 # Windows activated?
 $licensed = $(Get-ActivationStatus).Status
