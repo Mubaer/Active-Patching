@@ -21,7 +21,7 @@ break
 
 }
 
-$version = "2.2.0" # added revoke mode
+$version = "3.0.0" # added revoke mode
 
 Start-Transcript -Path "C:\mr_managed_it\Logs\decline_approve.txt" #-Append
 
@@ -37,6 +37,17 @@ Get-Service -name 'WsusService' | Start-Service
 iisreset.exe
 
 Start-Sleep -Seconds 60
+
+$wsus = Get-WSUSServer
+
+$subscription = $wsus.GetSubscription()
+$subscription.StartSynchronization()
+
+write-host "Starting WSUS Sync, will take some time"
+Start-Sleep -Seconds 60 # Wait for sync to start before monitoring
+while ($subscription.GetSynchronizationProgress().ProcessedItems -ne $subscription.GetSynchronizationProgress().TotalItems) 
+ {Start-sleep -Seconds 10}
+Write-Host "Sync is done."
 
 
 if ((Test-Path "C:\mr_managed_it\scripts\kb_decline_approve.csv") -and (Test-Path "C:\mr_managed_it\scripts\category_decline_approve.csv") ){
@@ -189,12 +200,8 @@ Get-PSWSUSUpdate -IncludeText "Edge-" -ToCreationDate $date2 | Where-Object {$_.
 
 }else{
 
-write-host "Fehler! Mind. einer der Dateien C:\mr_managed_it\Scripts\kb_decline_approve.csv oder category_decline_approve.csv wurde nicht gefunden. Es werden keine Veraenderungen an den WSUS-Freigaben vorgenommen." -ForegroundColor Red
+write-host "Error! Cannot find at least one of files: C:\mr_managed_it\Scripts\kb_decline_approve.csv or category_decline_approve.csv No approvals were made. Check your installation."
 
 }
-
-
-
-
 
 Stop-Transcript
