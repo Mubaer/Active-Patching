@@ -1,5 +1,5 @@
-$version = "1.0.5"
-$exitcode = 0
+$version = "1.1.2"
+$LASTEXITCODE = 0
 $warning = 0
 $Port = 8530
 $wsusserver = "localhost"
@@ -13,7 +13,10 @@ $updateScope.UpdateApprovalActions = [Microsoft.UpdateServices.Administration.Up
 $report = @()
 $treffer = 0
 $i = 0
-
+$output2016 = "Current"
+$output2019 = "Current"
+$output2022 = "Current"
+$output2025 = "Current"
 
 $request = Invoke-WebRequest "https://support.microsoft.com/en-gb/help/4000825" –UseBasicParsing
 If ($request.StatusCode -eq 200) {
@@ -60,7 +63,7 @@ If ($request.StatusCode -eq 200) {
 }
         $kb = $CurrentServer2016Raw.KB
         $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb} #Getting every update where the title matches the $kbnumber
-        if (-not $updates){$kb = $lastServer2016Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb}} #Getting every update where the title matches the $kbnumber}
+        if (-not $updates){$kb = $lastServer2016Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb};$output2016 = "Last"} #Getting every update where the title matches the $kbnumber}
           ForEach($update in $updates){ #Loop against the list of updates I stored in $updates in the previous step
           $update.GetUpdateInstallationInfoPerComputerTarget($CompSc) |  ForEach-Object {
           $Comp = $wsus.GetComputerTarget($_.ComputerTargetId)# using #Computer object ID to retrieve the computer object properties (Name, #IP address)
@@ -74,7 +77,7 @@ If ($request.StatusCode -eq 200) {
           }elseif($info.InstallationStatus -like "Failed"){
           $info.InstallationStatus = "Failed"
           $info.ICStatus = "(CRITICAL)"
-          $exitcode = 2
+          $LASTEXITCODE = 2
           
           }elseif($info.InstallationStatus -like "InstalledPendingReboot"){
           $info.InstallationStatus = "     PendingReboot" + "      `t"
@@ -87,10 +90,16 @@ If ($request.StatusCode -eq 200) {
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
           $warning = 1
+          
           }elseif($info.InstallationStatus -like "NotInstalled"){
           $info.InstallationStatus = "     NotInstalled" + "      `t"
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
+          $warning = 1
+          
+          }elseif($info.InstallationStatus -like "Downloaded"){
+          $info.InstallationStatus = "     Downloaded"
+          $info.ICStatus = "(OK)"
           $warning = 1
           }          
           
@@ -154,7 +163,7 @@ If ($request.StatusCode -eq 200) {
 }
         $kb = $CurrentServer2019Raw.KB
         $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb} #Getting every update where the title matches the $kbnumber
-        if (-not $updates){$kb = $lastServer2019Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb}} #Getting every update where the title matches the $kbnumber}
+        if (-not $updates){$kb = $lastServer2019Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb};$output2019 = "Last"} #Getting every update where the title matches the $kbnumber}
           ForEach($update in $updates){ #Loop against the list of updates I stored in $updates in the previous step
           $update.GetUpdateInstallationInfoPerComputerTarget($CompSc) |  ForEach-Object {
           $Comp = $wsus.GetComputerTarget($_.ComputerTargetId)# using #Computer object ID to retrieve the computer object properties (Name, #IP address)
@@ -168,7 +177,7 @@ If ($request.StatusCode -eq 200) {
           }elseif($info.InstallationStatus -like "Failed"){
           $info.InstallationStatus = "Failed"
           $info.ICStatus = "(CRITICAL)"
-          $exitcode = 2
+          $LASTEXITCODE = 2
           
           }elseif($info.InstallationStatus -like "InstalledPendingReboot"){
           $info.InstallationStatus = "     PendingReboot" + "      `t"
@@ -181,10 +190,16 @@ If ($request.StatusCode -eq 200) {
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
           $warning = 1
+
           }elseif($info.InstallationStatus -like "NotInstalled"){
           $info.InstallationStatus = "     NotInstalled" + "      `t"
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
+          $warning = 1
+          
+          }elseif($info.InstallationStatus -like "Downloaded"){
+          $info.InstallationStatus = "Downloaded"
+          $info.ICStatus = "(OK)"
           $warning = 1
           }          
           
@@ -249,7 +264,7 @@ If ($request.StatusCode -eq 200) {
 }
         $kb = $CurrentServer2022Raw.KB
         $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb} #Getting every update where the title matches the $kbnumber
-        if (-not $updates){$kb = $lastServer2022Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb}} #Getting every update where the title matches the $kbnumber}
+        if (-not $updates){$kb = $lastServer2022Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb};$output2022 = "Last"} #Getting every update where the title matches the $kbnumber}
           ForEach($update in $updates){ #Loop against the list of updates I stored in $updates in the previous step
           $update.GetUpdateInstallationInfoPerComputerTarget($CompSc) |  ForEach-Object {
           $Comp = $wsus.GetComputerTarget($_.ComputerTargetId)# using #Computer object ID to retrieve the computer object properties (Name, #IP address)
@@ -263,7 +278,7 @@ If ($request.StatusCode -eq 200) {
           }elseif($info.InstallationStatus -like "Failed"){
           $info.InstallationStatus = "Failed"
           $info.ICStatus = "(CRITICAL)"
-          $exitcode = 2
+          $LASTEXITCODE = 2
           
           }elseif($info.InstallationStatus -like "InstalledPendingReboot"){
           $info.InstallationStatus = "     PendingReboot" + "      `t"
@@ -276,12 +291,19 @@ If ($request.StatusCode -eq 200) {
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
           $warning = 1
+          
           }elseif($info.InstallationStatus -like "NotInstalled"){
           $info.InstallationStatus = "     NotInstalled" + "      `t"
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
           $warning = 1
+                    
+          }elseif($info.InstallationStatus -like "Downloaded"){
+          $info.InstallationStatus = "Downloaded"
+          $info.ICStatus = "(OK)"
+          $warning = 1
           }          
+
           
           $info.UpdateTitle = $kb
           #$info.LegacyName = $update.LegacyName
@@ -344,7 +366,7 @@ If ($request.StatusCode -eq 200) {
 }
         $kb = $CurrentServer2025Raw.KB
         $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb} #Getting every update where the title matches the $kbnumber
-        if (-not $updates){$kb = $lastServer2025Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb}} #Getting every update where the title matches the $kbnumber}
+        if (-not $updates){$kb = $lastServer2025Raw.KB; $updates = $wsus.GetUpdates($updateScope) | Where-Object{$_.Title -match $kb};$output2025 = "Last"} #Getting every update where the title matches the $kbnumber}
           ForEach($update in $updates){ #Loop against the list of updates I stored in $updates in the previous step
           $update.GetUpdateInstallationInfoPerComputerTarget($CompSc) |  ForEach-Object {
           $Comp = $wsus.GetComputerTarget($_.ComputerTargetId)# using #Computer object ID to retrieve the computer object properties (Name, #IP address)
@@ -358,7 +380,7 @@ If ($request.StatusCode -eq 200) {
           }elseif($info.InstallationStatus -like "Failed"){
           $info.InstallationStatus = "Failed"
           $info.ICStatus = "(CRITICAL)"
-          $exitcode = 2
+          $LASTEXITCODE = 2
           
           }elseif($info.InstallationStatus -like "InstalledPendingReboot"){
           $info.InstallationStatus = "     PendingReboot" + "      `t"
@@ -371,12 +393,18 @@ If ($request.StatusCode -eq 200) {
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
           $warning = 1
+          
           }elseif($info.InstallationStatus -like "NotInstalled"){
           $info.InstallationStatus = "     NotInstalled" + "      `t"
           $info.UpdateTitle = "`t" + $info.UpdateTitle
           $info.ICStatus = "(WARNING)"
           $warning = 1
+                    
+          }elseif($info.InstallationStatus -like "Downloaded"){
+          $info.InstallationStatus = "Downloaded"
+          $info.ICStatus = "(OK)"
           }          
+
           
           $info.UpdateTitle = $kb
           #$info.LegacyName = $update.LegacyName
@@ -391,24 +419,25 @@ If ($request.StatusCode -eq 200) {
         }
      }
 
-
-
-
 $CurrentServer2016Raw.Title = $($wsus.SearchUpdates($CurrentServer2016Raw.KB)).title
 $CurrentServer2019Raw.Title = $($wsus.SearchUpdates($CurrentServer2019Raw.KB)).title
 $CurrentServer2022Raw.Title = $($wsus.SearchUpdates($CurrentServer2022Raw.KB)).title
 $CurrentServer2025Raw.Title = $($wsus.SearchUpdates($CurrentServer2025Raw.KB)).title
+$LastServer2016Raw.Title = $($wsus.SearchUpdates($LastServer2016Raw.KB)).title
+$LastServer2019Raw.Title = $($wsus.SearchUpdates($LastServer2019Raw.KB)).title
+$LastServer2022Raw.Title = $($wsus.SearchUpdates($LastServer2022Raw.KB)).title
+$LastServer2025Raw.Title = $($wsus.SearchUpdates($LastServer2025Raw.KB)).title
 
-if($warning -eq 0 -and $exitcode -eq 0){
+if($warning -eq 0 -and $LASTEXITCODE -eq 0){
 $result = "(OK) Overall Status"
 }
 
-if ($warning -eq 1 -and $exitcode -eq 0){
+if ($warning -eq 1 -and $LASTEXITCODE -eq 0){
 $result = "(WARNING) Overall Status"
-$exitcode = 1
+$LASTEXITCODE = 1
 }
 
-if($exitcode -eq 2){
+if($LASTEXITCODE -eq 2){
 $result = "(CRITICAL) Overall Status"
 }
 
@@ -417,27 +446,65 @@ Write-host $result
 
 $report | ft -HideTableHeaders | Out-String -Width 9999 -Stream
 
+if($output2016 -like "Current"){
+
 Write-host "OS Name :" $CurrentServer2016Raw.'OS Name'
 Write-host "OS Build:" $CurrentServer2016Raw.'OS Version'"."$CurrentServer2016Raw.'OS build'
 Write-host "KB      :" $CurrentServer2016Raw.KB
 Write-host "Title   :" $CurrentServer2016Raw.Title
 Write-host
+}else{
+Write-host "OS Name :" $LastServer2016Raw.'OS Name'
+Write-host "OS Build:" $LastServer2016Raw.'OS Version'"."$LastServer2016Raw.'OS build'
+Write-host "KB      :" $LastServer2016Raw.KB
+Write-host "Title   :" $LastServer2016Raw.Title
+Write-host
+}
+
+if($output2019 -like "Current"){
+
 Write-host "OS Name :" $CurrentServer2019Raw.'OS Name'
 Write-host "OS Build:" $CurrentServer2019Raw.'OS Version'"."$CurrentServer2019Raw.'OS build'
 Write-host "KB      :" $CurrentServer2019Raw.KB
 Write-host "Title   :" $CurrentServer2019Raw.Title
 Write-host
+}else{
+Write-host "OS Name :" $LastServer2019Raw.'OS Name'
+Write-host "OS Build:" $LastServer2019Raw.'OS Version'"."$LastServer2019Raw.'OS build'
+Write-host "KB      :" $LastServer2019Raw.KB
+Write-host "Title   :" $LastServer2019Raw.Title
+Write-host
+}
+
+if($output2022 -like "Current"){
+
 Write-host "OS Name :" $CurrentServer2022Raw.'OS Name'
 Write-host "OS Build:" $CurrentServer2022Raw.'OS Version'"."$CurrentServer2022Raw.'OS build'
 Write-host "KB      :" $CurrentServer2022Raw.KB
 Write-host "Title   :" $CurrentServer2022Raw.Title
 Write-host
+}else{
+Write-host "OS Name :" $LastServer2022Raw.'OS Name'
+Write-host "OS Build:" $LastServer2022Raw.'OS Version'"."$LastServer2022Raw.'OS build'
+Write-host "KB      :" $LastServer2022Raw.KB
+Write-host "Title   :" $LastServer2022Raw.Title
+Write-host
+}
+
+if($output2025 -like "Current"){
+
 Write-host "OS Name :" $CurrentServer2025Raw.'OS Name'
 Write-host "OS Build:" $CurrentServer2025Raw.'OS Version'"."$CurrentServer2025Raw.'OS build'
 Write-host "KB      :" $CurrentServer2025Raw.KB
 Write-host "Title   :" $CurrentServer2025Raw.Title
 Write-host
-
+}else{
+Write-host "OS Name :" $LastServer2025Raw.'OS Name'
+Write-host "OS Build:" $LastServer2025Raw.'OS Version'"."$LastServer2025Raw.'OS build'
+Write-host "KB      :" $LastServer2025Raw.KB
+Write-host "Title   :" $LastServer2025Raw.Title
+Write-host
+}
 
 Write-host "Check-version: " $version
-;exit ($exitCode)
+;exit ($LASTEXITCODE)
