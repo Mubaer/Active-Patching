@@ -21,7 +21,7 @@ break
 
 }
 
-$version = "3.0.0" # added revoke mode
+$version = "3.0.1" # added revoke mode
 
 Start-Transcript -Path "C:\mr_managed_it\Logs\decline_approve.txt" #-Append
 
@@ -45,7 +45,7 @@ $subscription.StartSynchronization()
 
 write-host "Starting WSUS Sync, will take some time"
 Start-Sleep -Seconds 60 # Wait for sync to start before monitoring
-while ($subscription.GetSynchronizationProgress().ProcessedItems -ne $subscription.GetSynchronizationProgress().TotalItems) 
+while ($subscription.GetSynchronizationStatus() -like "Running") 
  {Start-sleep -Seconds 10}
 Write-Host "Sync is done."
 
