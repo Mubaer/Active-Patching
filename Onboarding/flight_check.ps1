@@ -160,7 +160,7 @@ function Test-PendingReboot {
 Clear-Host
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.6" #internationalize time dispersion
+$check_version = "2.2.7" #wsus sync disabled?
 
 # Part 1
 # System health parameters
@@ -523,8 +523,12 @@ $lastSyncInfo = "N/A"
 $lastSyncStart = "N/A"
 $nextSyncStart = "N/A"
 }
-# WSUS last approve
 
+# WSUS Sync disabled
+$WSUSSyncAutomatic = "N/A"
+$WSUSSyncAutomatic = $server.GetSubscription().SynchronizeAutomatically
+
+# WSUS last approve
 $approve_start = Get-Content -Path "C:\mr_managed_it\Logs\decline_approve.txt" | Where-Object { $_ -match "Startzeit" -or $_ -match "Start time"}
 $approve_end = Get-Content -Path "C:\mr_managed_it\Logs\decline_approve.txt"  | Where-Object { $_ -match "Endzeit" -or $_ -match "End time"}
 
@@ -668,6 +672,7 @@ $result += "Systemsettings WSUS last sync Info: " + $lastSyncInfo    + "`r`n"
 $result += "Systemsettings WSUS last sync Errors: " + $lastSyncErrors    + "`r`n"
 $result += "Systemsettings WSUS last sync Start: " + $lastSyncStart    + "`r`n"
 $result += "Systemsettings WSUS next sync Start: " + $nextSyncStart    + "`r`n"
+$result += "Systemsettings WSUS Automatic Sync: " + $WSUSSyncAutomatic    + "`r`n"
 $result += "Systemsettings WSUS Downloaded Bytes: " + $dlsDB    + "`r`n"
 $result += "Systemsettings WSUS Bytes to download: " + $dlsTBTD    + "`r`n"
 $result += "Systemsettings WSUS DownloadSuccess: " + $dlsucc    + "`r`n"
