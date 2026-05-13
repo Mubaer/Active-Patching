@@ -160,7 +160,7 @@ function Test-PendingReboot {
 Clear-Host
 
 $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$check_version = "2.2.7" #wsus sync disabled?
+$check_version = "2.2.8" #Icinga-Versions
 
 # Part 1
 # System health parameters
@@ -495,6 +495,20 @@ if([System.IO.File]::Exists($iccert1) -and [System.IO.File]::Exists($iccert2) -a
 $iccerts = "True"}else{
 $iccerts = "False"}
 
+# Check icinga Infrastructure versions
+
+$ic_agent = "False"
+$ic_framework = "False"
+$ic_plugins = "False"
+$icinga = Show-Icinga 
+$agent = $icinga | select-string "agent" -CaseSensitive
+$framework = $icinga | select-string "framework " -CaseSensitive
+$plugins = $icinga | select-string "plugins" -CaseSensitive
+
+$ic_agent = ($agent -split '\s+')[1]
+$ic_framework = ($framework -split '\s+')[1]
+$ic_plugins = ($plugins -split '\s+')[1]
+
 # WSUS endpoint
 $server = Get-WsusServer
 $config = $server.GetConfiguration()
@@ -688,6 +702,9 @@ $result += "Systemsettings Decline_Approve version: " + $da    + "`r`n"
 $result += "Systemsettings File Icinga Certs exist: " + $iccerts    + "`r`n"
 $result += "Systemsettings Icinga satellite reachable: " + $ic80.TcpTestSucceeded    + "`r`n"
 $result += "Systemsettings Icinga web repo reachable: " + $ic443.TcpTestSucceeded    + "`r`n"
+$result += "Systemsettings Icinga Agent version: " + $ic_agent    + "`r`n"
+$result += "Systemsettings Icinga Framework version: " + $ic_framework    + "`r`n"
+$result += "Systemsettings Icinga Plugins version: " + $ic_plugins    + "`r`n"
 $result += "Systemsettings PSRemote enabled: " + $wsman    + "`r`n"
 $result += "Patchsettings Disabled UI access: " + $uiacccess    + "`r`n"
 $result += "Patchsettings Valid Registry settings: " + $regsettings    + "`r`n"
