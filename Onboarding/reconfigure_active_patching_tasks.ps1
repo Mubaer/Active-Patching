@@ -16,6 +16,7 @@ Set-ScheduledTask -TaskName "MR Active Patching" -Trigger $trigger -User mradmin
 Unregister-ScheduledTask -TaskName "MR Active Patching MBs" -Confirm:$false
 Unregister-ScheduledTask -TaskName "MR Active Patching NON-AD" -Confirm:$false
 Unregister-ScheduledTask -TaskName "MR Active Patching Sunday" -Confirm:$false
+Unregister-ScheduledTask -TaskName "MR Active Patching MBS Sunday" -Confirm:$false
 
 
 Set-Location "C:\mr_managed_it\scripts"
