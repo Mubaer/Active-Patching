@@ -66,3 +66,24 @@ get-wulist -ComputerName $vm
 
 #Target version for Windows Updates breaks Windows Update with 0x8024500C error
 # HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\DisableDualScan 0x00000001 DWORD
+
+
+
+
+
+function testport ($hostname='vm-gwc-cmk.int.nuernberger-automobil.de',$port=8000,$timeout=100) {
+  $requestCallback = $state = $null
+  $client = New-Object System.Net.Sockets.TcpClient
+  $beginConnect = $client.BeginConnect($hostname,$port,$requestCallback,$state)
+  Start-Sleep -milli $timeOut
+  if ($client.Connected) { $open = $true } else { $open = $false }
+  $client.Close()
+  [pscustomobject]@{hostname=$hostname;port=$port;open=$open}
+}
+
+while ($true){
+testport
+start-sleep 1
+clear}
+
+   
